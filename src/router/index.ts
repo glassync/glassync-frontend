@@ -1,20 +1,30 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import Calendar from "../components/Calendar.vue";
+import FriendsPage from "../views/FriendView.vue";
+import UserProfile from "../views/AccountView.vue";
+import GlassiesPage from "../views/GlassiesView.vue";
 
+// Явная типизация маршрутов
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "Calendar",
+    component: Calendar,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/friends",
+    name: "Friends",
+    component: FriendsPage,
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: UserProfile,
+  },
+  {
+    path: "/glassies",
+    name: "Glassies",
+    component: GlassiesPage,
   },
 ];
 
