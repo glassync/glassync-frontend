@@ -1,94 +1,109 @@
 import { RecurrenceInterval } from "./Enum";
 
 export class Event {
-    constructor(
-        private _uid: number,
-        private _title: string,
-        private _description: string,
-        private _date: Date,
-        private _startTime: string,
-        private _endTime: string,
-        private _recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE,
-        private _recurrenceValue: number = 0
-    ) {}
+  private uid: number;
+  private title: string;
+  private description: string;
+  private date: Date;
+  private startTime: string;
+  private endTime: string;
+  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE;
+  private recurrenceValue = 0;
 
-    get uid(): number {
-        return this._uid;
-    }
+  constructor(
+    uid: number,
+    title: string,
+    description: string,
+    date: Date,
+    startTime: string,
+    endTime: string,
+    recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE,
+    recurrenceValue: number
+  ) {
+    this.uid = uid;
+    this.title = title;
+    this.description = description;
+    this.date = date;
+    this.recurrenceInterval = recurrenceInterval;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.recurrenceInterval = recurrenceInterval;
+    this.recurrenceValue = recurrenceValue;
+  }
 
-    get title(): string {
-        return this._title;
-    }
+  public getUID(): number {
+    return this.uid;
+  }
 
-    get description(): string {
-        return this._description;
-    }
+  public getTitle(): string {
+    return this.title;
+  }
 
-    get date(): Date {
-        return this._date;
-    }
+  public getDescription(): string {
+    return this.description;
+  }
 
-    get startTime(): string {
-        return this._startTime;
-    }
+  public getDate(): Date {
+    return this.date;
+  }
 
-    get endTime(): string {
-        return this._endTime;
-    }
+  public getStartTime(): string {
+    return this.startTime;
+  }
 
-    get recurrenceInterval(): RecurrenceInterval {
-        return this._recurrenceInterval;
-    }
+  public getEndTime(): string {
+    return this.endTime;
+  }
 
-    get recurrenceValue(): number {
-        return this._recurrenceValue;
-    }
+  public getRecurrenceInterval(): RecurrenceInterval {
+    return this.recurrenceInterval;
+  }
 
-    set uid(value: number) {
-        this._uid = value;
-    }
+  public getRecurrenceValue(): number {
+    return this.recurrenceValue;
+  }
 
-    set title(value: string) {
-        this._title = value;
-    }
+  public setUID(value: number) {
+    this.uid = value;
+  }
 
-    set description(value: string) {
-        this._description = value;
-    }
+  public setTitle(value: string) {
+    this.title = value;
+  }
 
-    set date(value: Date) {
-        this._date = value;
-    }
+  public setDescription(value: string) {
+    this.description = value;
+  }
 
-    set startTime(value: string) {
-        if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
-            this._startTime = value;
-        } else {
-            throw new Error('Неверный формат времени. Используйте "HH:mm"');
-        }
-    }
+  public setDate(value: Date) {
+    this.date = value;
+  }
 
-    set endTime(value: string) {
-        if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
-            this._endTime = value;
-        } else {
-            throw new Error('Неверный формат времени. Используйте "HH:mm"');
-        }
+  public setStartTime(value: string) {
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
+      this.startTime = value;
+    } else {
+      throw new Error('Неверный формат времени. Используйте "HH:mm"');
     }
+  }
 
-    set recurrenceInterval(value: RecurrenceInterval) {
-        this._recurrenceInterval = value;
+  public setEndTime(value: string) {
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
+      this.endTime = value;
+    } else {
+      throw new Error('Неверный формат времени. Используйте "HH:mm"');
     }
+  }
 
-    set recurrenceValue(value: number) {
-        if (value >= 0) {
-            this._recurrenceValue = value;
-        } else {
-            throw new Error('Значение интервала не может быть отрицательным');
-        }
-    }
+  public setRecurrenceInterval(value: RecurrenceInterval) {
+    this.recurrenceInterval = value;
+  }
 
-    toString(): string {
-        return `[${this._uid}] ${this._title} (${this._date.toLocaleDateString()} ${this._startTime}-${this._endTime})`;
+  public setRecurrenceValue(value: number) {
+    if (value >= 0) {
+      this.recurrenceValue = value;
+    } else {
+      throw new Error("Значение интервала не может быть отрицательным");
     }
+  }
 }
