@@ -1,10 +1,14 @@
-class Profile {
-  private static instance: Profile | null = null;
-  private authorized = false;
-  private user: Person | null = null;
-  private notifications?: NotificationU[];
-  private notificationPlatforms?: PlatformNotification[];
+import { NotificationPlatform } from "./NotificationPlatform";
+import { Person } from "./Person";
 
+export class Profile {
+  private static instance: Profile;
+  private isAuthorized = false;
+  private authorizedUser: Person | null = null;
+  private notifications: Notification[] = [];
+  private notificationPlatforms: NotificationPlatform[] = [];
+
+  // TODO решить проблему с конструктором синглтон
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
@@ -14,68 +18,75 @@ class Profile {
     }
     return Profile.instance;
   }
+  // private constructor(
+  //   isAuthorized: boolean | false,
+  //   authorizedUser: Person | null,
+  //   notifications: Notification[],
+  //   notificationPlatforms: NotificationPlatform[]
+  // ) {
+  //   this.isAuthorized = isAuthorized;
+  //   this.authorizedUser = authorizedUser;
+  //   this.notifications = notifications;
+  //   this.notificationPlatforms = notificationPlatforms;
+  // }
+  //
+  // public static getInstance(): Profile {
+  //   if (!Profile.instance) {
+  //     Profile.instance = new Profile(
+  //       this.isAuthorized,
+  //       this.authorizedUser,
+  //       this.notifications,
+  //       this.notificationPlatforms
+  //     );
+  //   }
+  //   return Profile.instance;
+  // }
 
-  public authorize(login: string, password: string): boolean {
-    // TODO
-    // if (login === 'test' && password === 'password') {
-    //   this.authorized = true;
-    //   this.user = new User(1, 'Ivan', 'Petrov', 'ivan_p', 'ivan@example.com');
-    //   return true;
-    // }
-    return false;
+  public login(login: string, password: string): boolean {
+    // Логика авторизации
+    this.isAuthorized = true; // Флаг авторизации
+    return this.isAuthorized;
   }
 
   public register(person: Person, password: string): boolean {
-    // TODO
-    return false;
+    // Логика регистрации
+    return true; // Флаг регистрации true/false
   }
 
   public logout(): void {
-    // TODO
+    this.isAuthorized = false;
+    this.authorizedUser = null;
   }
 
-  public changeProfileData(params: Person): boolean {
-    // TODO
+  public updateProfile(person: Person): boolean {
+    if (!this.isAuthorized) return false;
+    // Логика обновления данных
     return true;
   }
 
   public changePassword(currentPassword: string, newPassword: string): boolean {
-    // TODO
-    return false;
+    if (!this.isAuthorized) return false;
+    // Логика изменения пароля
+    return true;
   }
 
   public getAuthorizedUser(): Person | null {
-    // TODO
-    // if (!this.authorized) {
-    //   throw new Error('User not authorized');
-    // }
-    return this.user;
+    return this.authorizedUser;
   }
 
-  public getNotifications(): NotificationU[] {
-    // TODO
-    return [];
+  public getNotifications(): Notification[] {
+    return this.notifications;
   }
 
-  public getNotificationPlatforms(): PlatformNotification[] {
-    // TODO
-    return [];
+  public getNotificationPlatforms(): NotificationPlatform[] {
+    return this.notificationPlatforms;
   }
 
-  // public getNotificationPlatform(UID: number): PlatformNotification {
-  //   // TODO
-  //   return new PlatformNotification(`Platform ${UID}`);
-  // }
-
-  public addNotification(notification: NotificationU): void {
-    // TODO
-    // На диаграмме нет, но как будто бы нужно добавить
-  }
-
-  public addNotificationPlatform(
-    platformNotification: PlatformNotification
-  ): void {
-    // TODO
-    // На диаграмме нет, но как будто бы нужно добавить
+  public getNotificationPlatform(
+    UID: number
+  ): NotificationPlatform | undefined {
+    return this.notificationPlatforms.find(
+      (platform) => platform.getPlatformUID() === UID
+    );
   }
 }
