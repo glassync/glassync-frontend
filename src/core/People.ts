@@ -2,12 +2,9 @@ import { Person } from "./Person";
 import { PersonFilter } from "./PersonFilter";
 
 export class People {
-  private static instance: People | null = null;
-  private people: Person[] = [];
+  // region Singleton
 
-  private constructor() {
-    // Инициализация если нужно будет
-  }
+  private static instance: People | null = null;
 
   public static getInstance(): People {
     if (!People.instance) {
@@ -15,6 +12,20 @@ export class People {
     }
     return People.instance;
   }
+
+  // endregion
+
+  // region Конструкторы
+
+  private constructor() {
+    // Инициализация если нужно будет
+  }
+
+  // endregion
+
+  // region Люди
+
+  private people: Person[] = [];
 
   // ToDo: кажется этот метод не нужен будет. Если так и будет нужно удалить из истории. Пока пометил deprecated.
   /**
@@ -28,6 +39,10 @@ export class People {
   public getAllPeople(): Readonly<Person[]> {
     return [...this.people];
   }
+
+  // endregion
+
+  // region Геттеры
 
   public static async getPersonByUID(UID: number): Promise<Person | undefined> {
     try {
@@ -147,7 +162,9 @@ export class People {
     }
   }
 
-  // Вспомогательные методы
+  // endregion
+
+  // region Вспомогательные методы
 
   private static async handleApiError(response: Response): Promise<void> {
     try {
@@ -167,3 +184,5 @@ export class People {
     }
   }
 }
+
+// endregion
