@@ -147,28 +147,20 @@
 
           <h5 class="mt-4">Пригласить участников</h5>
 
-          <div
-            class="overflow-auto"
-            :style="{ maxHeight: '300px', minHeight: '200px' }"
-          >
-            <div
-              v-for="friend in friends"
-              :key="friend.getUserUID()"
-              class="form-check d-flex align-items-center mb-2"
-            >
-              <input
-                class="form-check-input me-2"
-                type="checkbox"
-                :id="'friend-' + friend.getUserUID()"
-                v-model="form.invited[friend.getUserUID()]"
-              />
-              <label
-                class="form-check-label"
-                :for="'friend-' + friend.getUserUID()"
-                >{{ friend.getFirstName() }} {{ friend.getLastName() }}</label
-              >
-            </div>
-          </div>
+          <!-- Для создателя: список selectable друзей (с чекбоксами, активными) -->
+          <PeopleList
+            v-if="isCreator"
+            :profile="props.profile"
+            :selectable="selectableFriends"
+            v-model:selectedPeople="selectedParticipants"
+          />
+
+          <!-- Для не создателя: список участников без чекбоксов -->
+          <PeopleList
+            v-else
+            :profile="props.profile"
+            :sentRequests="eventParticipants"
+          />
         </div>
       </div>
     </form>
@@ -214,6 +206,10 @@ import type { Person } from "@/core/Person";
 import { ref, reactive, watch, defineProps } from "vue";
 import { RecurrenceInterval } from "@/core/Enum";
 import { Event } from "@/core/Event";
+import { People } from "@/core/People";
+import { PersonFilter } from "@/core/PersonFilter";
+import { RelationToAuthorizedUser } from "@/core/Enum";
+import PeopleList from "@/components/PeopleList.vue";
 
 const props = defineProps<{
   profile: Profile;
@@ -249,12 +245,23 @@ const validationErrors = reactive({
   date: "",
 });
 
+const peopleInstance = People.getInstance();
+
+// Список друзей, которых можно выбрать (для создателя)
+const selectableFriends = ref<Person[]>([]);
+
+// Участники события (для не создателя и для создания/редактирования)
+const eventParticipants = ref<Person[]>([]);
+
+// Отмеченные выбранные люди (для v-model выбранных в PeopleList)
+const selectedParticipants = ref<Person[]>([]);
+
 watch(
   () => props.event,
   (event) => {
+    const user = props.profile.getAuthorizedUser();
     if (event) {
       isEditMode.value = true;
-      const user = props.profile.getAuthorizedUser();
       isCreator.value = user?.getUserUID() === event.getCreatorUID();
 
       // Заполняем поля из события
@@ -284,17 +291,56 @@ watch(
         form.remindMinutes = 1;
       }
 
-      // Инициируем список приглашённых
-      form.invited = {};
-      for (const friend of props.friends) {
-        form.invited[friend.getUserUID()] =
-          event.getMembersMap().get(friend.getUserUID()) ?? false;
+      // Получаем всех друзей
+      const friendsFilter = new PersonFilter(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        RelationToAuthorizedUser.FRIEND
+      );
+      const allFriends = peopleInstance.getPeopleByFilter(friendsFilter);
+
+      // Получаем участников события
+      const membersMap = event.getMembersMap();
+      const participantsArr: Person[] = [];
+      for (const [uid, included] of membersMap.entries()) {
+        if (included) {
+          const person =
+            allFriends.find((f) => f.getUserUID() === uid) ||
+            props.friends.find((f) => f.getUserUID() === uid);
+          if (person) participantsArr.push(person);
+        }
+      }
+      eventParticipants.value = participantsArr;
+
+      if (isCreator.value) {
+        // Для редактирования: выделяем друзей, не входящих в событие, в selectableFriends
+        selectableFriends.value = allFriends.filter(
+          (f) => !membersMap.get(f.getUserUID())
+        );
+
+        // Отмечаем приглашённых в форме
+        form.invited = {};
+        for (const friend of allFriends) {
+          form.invited[friend.getUserUID()] =
+            membersMap.get(friend.getUserUID()) ?? false;
+        }
+
+        // Предустанавливаем выбранных участников для чекбоксов в списке
+        selectedParticipants.value = allFriends.filter(
+          (uid) => form.invited[uid.getUserUID()]
+        );
+      } else {
+        // Для не создателя: selectable пустой, участников в sentRequests
+        selectableFriends.value = [];
+        selectedParticipants.value = [];
       }
     } else {
+      // Создание события
       isEditMode.value = false;
-      isCreator.value = true; // Создатель - текущий пользователь
+      isCreator.value = true;
 
-      // Инициализация пустой формы для создания
       form.name = "";
       form.description = "";
       form.date = "";
@@ -308,16 +354,27 @@ watch(
       form.remind = false;
       form.remindMinutes = 1;
 
+      // Получаем всех друзей для списка (неактивные чекбоксы)
+      const friendsFilter = new PersonFilter(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        RelationToAuthorizedUser.FRIEND
+      );
+      selectableFriends.value = peopleInstance.getPeopleByFilter(friendsFilter);
+
+      eventParticipants.value = [];
+      selectedParticipants.value = [];
       form.invited = {};
-      for (const friend of props.friends) {
-        form.invited[friend.getUserUID()] = false; // По умолчанию приглашены все друзья
+      for (const friend of selectableFriends.value) {
+        form.invited[friend.getUserUID()] = false;
       }
     }
   },
   { immediate: true }
 );
 
-// Форматируем дату в yyyy-mm-dd
 function formatDate(date: Date): string {
   const d = new Date(date);
   const month = (d.getMonth() + 1).toString().padStart(2, "0");
@@ -325,7 +382,6 @@ function formatDate(date: Date): string {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
-// Валидация формы (название и дата обязательны)
 function validate(): boolean {
   let valid = true;
   validationErrors.name = "";
@@ -342,7 +398,6 @@ function validate(): boolean {
   return valid;
 }
 
-// Формируем объект события из формы
 function buildEvent(): Event {
   const eventObj = new Event();
 
@@ -367,11 +422,19 @@ function buildEvent(): Event {
     eventObj.setReminderTimes([]);
   }
 
-  // Сформировать map участников
+  // Собираем участников из выбранных (для создателя)
   const membersMap = new Map<number, boolean>();
-  for (const uid in form.invited) {
-    if (Object.prototype.hasOwnProperty.call(form.invited, uid)) {
-      membersMap.set(Number(uid), form.invited[uid]);
+
+  if (isCreator.value) {
+    // Объединяем выбранных участников
+    for (const person of selectedParticipants.value) {
+      membersMap.set(person.getUserUID(), true);
+    }
+  } else if (isEditMode.value && props.event) {
+    // Не создатель — оставляем участников без изменений
+    const eventMembers = props.event.getMembersMap();
+    for (const [uid, included] of eventMembers.entries()) {
+      membersMap.set(uid, included);
     }
   }
   eventObj.setMembersMap(membersMap);
