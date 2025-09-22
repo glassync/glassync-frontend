@@ -11,6 +11,8 @@ class EventMember {
     this.event = event;
   }
 
+  // ToDo: Что за дублирование кода!? Я обновил диаграммы. Эту логику нужно перенести в событие.
+
   public async confirmAttendance(): Promise<string | undefined> {
     try {
       const response = await fetch(`api/event/action`, {
