@@ -68,6 +68,7 @@ export class NotificationPlatform {
     this.identifier = id;
   }
 
+  // ToDo: сделайте просто setActive
   public activate(): void {
     // TODO
     // На диаграмме нет, но как будто бы нужно добавить
