@@ -43,7 +43,13 @@ export class Event {
   public getTitle(): string {
     return this.title;
   }
+  public getTitle(): string {
+    return this.title;
+  }
 
+  public getDescription(): string {
+    return this.description;
+  }
   public getDescription(): string {
     return this.description;
   }
@@ -51,7 +57,13 @@ export class Event {
   public getDate(): Date {
     return this.date;
   }
+  public getDate(): Date {
+    return this.date;
+  }
 
+  public getStartTime(): string {
+    return this.startTime;
+  }
   public getStartTime(): string {
     return this.startTime;
   }
@@ -59,11 +71,20 @@ export class Event {
   public getEndTime(): string {
     return this.endTime;
   }
+  public getEndTime(): string {
+    return this.endTime;
+  }
 
   public getRecurrenceInterval(): RecurrenceInterval {
     return this.recurrenceInterval;
   }
+  public getRecurrenceInterval(): RecurrenceInterval {
+    return this.recurrenceInterval;
+  }
 
+  public getRecurrenceValue(): number {
+    return this.recurrenceValue;
+  }
   public getRecurrenceValue(): number {
     return this.recurrenceValue;
   }
@@ -79,7 +100,13 @@ export class Event {
   public setTitle(value: string) {
     this.title = value;
   }
+  public setTitle(value: string) {
+    this.title = value;
+  }
 
+  public setDescription(value: string) {
+    this.description = value;
+  }
   public setDescription(value: string) {
     this.description = value;
   }
@@ -87,7 +114,17 @@ export class Event {
   public setDate(value: Date) {
     this.date = value;
   }
+  public setDate(value: Date) {
+    this.date = value;
+  }
 
+  public setStartTime(value: string) {
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
+      this.startTime = value;
+    } else {
+      throw new Error('Неверный формат времени. Используйте "HH:mm"');
+    }
+  }
   public setStartTime(value: string) {
     if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
       this.startTime = value;
@@ -103,7 +140,17 @@ export class Event {
       throw new Error('Неверный формат времени. Используйте "HH:mm"');
     }
   }
+  public setEndTime(value: string) {
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
+      this.endTime = value;
+    } else {
+      throw new Error('Неверный формат времени. Используйте "HH:mm"');
+    }
+  }
 
+  public setRecurrenceInterval(value: RecurrenceInterval) {
+    this.recurrenceInterval = value;
+  }
   public setRecurrenceInterval(value: RecurrenceInterval) {
     this.recurrenceInterval = value;
   }
