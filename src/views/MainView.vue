@@ -62,8 +62,7 @@ watch(
 
 const router = useRouter();
 function goToCreateEvent() {
-  // ToDo: логика перехода на страницу редактирования события
-  router.push("/events/create");
+  router.push("/event");
 }
 
 function onDateRangeChanged({
