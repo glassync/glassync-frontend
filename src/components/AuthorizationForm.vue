@@ -58,7 +58,6 @@ function handleLogin() {
   const success = props.profile.login(form.email, form.password);
 
   if (success) {
-    // ToDo: логика перехода на главную страницу после успешной авторизации
     router.push("/");
   } else {
     error.value = true;

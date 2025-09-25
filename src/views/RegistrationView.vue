@@ -20,7 +20,6 @@ const router = useRouter();
 defineProps<{ profile: Profile }>();
 
 function goToLogin() {
-  // ToDo: логика перехода на страницу авторизации
-  router.push("/login");
+  router.push("/authorization");
 }
 </script>
