@@ -15,7 +15,7 @@ class EventMember {
 
   public async confirmAttendance(): Promise<string | undefined> {
     try {
-      const response = await fetch(`api/event/action`, {
+      const response = await fetch(`api/event/action/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ class EventMember {
 
   public async cancelAttendance(): Promise<string | undefined> {
     try {
-      const response = await fetch(`api/event/action`, {
+      const response = await fetch(`api/event/action/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
