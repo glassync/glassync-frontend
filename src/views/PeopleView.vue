@@ -75,7 +75,7 @@ function loadFriends() {
     undefined,
     RelationToAuthorizedUser.FRIEND
   );
-  friends.value = peopleInstance.getPeopleByFilter(filter);
+  friends.value = peopleInstance.getPeopleByFilter(filter); //TODO static
 }
 
 function loadFriendRequests() {
@@ -83,11 +83,9 @@ function loadFriendRequests() {
     undefined,
     undefined,
     undefined,
-    undefined,
     RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
   );
   const filterSent = new PersonFilter(
-    undefined,
     undefined,
     undefined,
     undefined,
@@ -104,7 +102,6 @@ function onFiltersReady(filters: PersonFilter[]) {
         undefined,
         undefined,
         undefined,
-        undefined,
         RelationToAuthorizedUser.FRIEND
       )
   );
@@ -114,7 +111,6 @@ function onFiltersReady(filters: PersonFilter[]) {
         f.getRelation() === RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
     ) ??
       new PersonFilter(
-        undefined,
         undefined,
         undefined,
         undefined,
@@ -129,7 +125,6 @@ function onFiltersReady(filters: PersonFilter[]) {
         undefined,
         undefined,
         undefined,
-        undefined,
         RelationToAuthorizedUser.NO_RELATION
       )
   );
@@ -138,7 +133,6 @@ function onFiltersReady(filters: PersonFilter[]) {
       (f) => f.getRelation() === RelationToAuthorizedUser.SENT_FRIEND_REQUEST
     ) ??
       new PersonFilter(
-        undefined,
         undefined,
         undefined,
         undefined,
