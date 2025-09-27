@@ -110,13 +110,16 @@ export class Profile {
         body: JSON.stringify({
           first_name: person.getFirstName(),
           last_name: person.getLastName(),
+          nickname: person.getNickname(),
           email: person.getEmail(),
           password: password,
         }),
       });
 
-      return await this.handleAuthResponse(response, person);
+      const loggedIn = await this.login(person.getEmail(), password);
+      return loggedIn ? true : false;
     } catch (error) {
+      localStorage.removeItem("userID");
       this.isAuthorized = false;
       this.authorizedUser = null;
       console.error("Ошибка сети:", error);
@@ -134,11 +137,13 @@ export class Profile {
       });
 
       this.isAuthorized = false;
+      localStorage.removeItem("userID");
       this.authorizedUser = null;
     } catch (error) {
       console.error("Ошибка при выходе:", error);
       this.isAuthorized = false;
       this.authorizedUser = null;
+      localStorage.removeItem("userID");
 
       localStorage.removeItem("token");
       window.location.href = "/login";
@@ -150,6 +155,7 @@ export class Profile {
     person: Person
   ): Promise<boolean> {
     if (response.ok) {
+      localStorage.setItem("userID", person.getUserUID().toString());
       this.isAuthorized = true;
       this.authorizedUser = person;
       return true;
