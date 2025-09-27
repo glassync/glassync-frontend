@@ -1,8 +1,9 @@
 export enum RecurrenceInterval {
-  NONE = "NONE",
-  DAILY = "DAILY",
-  WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY",
+  NONE = "none",
+  DAILY = "daily",
+  WEEKLY = "weekly",
+  MONTHLY = "monthly",
+  YEARLY = "yearly",
 }
 
 export enum NotificationType {
