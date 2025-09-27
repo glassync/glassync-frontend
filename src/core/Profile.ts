@@ -237,6 +237,14 @@ export class Profile {
   // endregion
   public async createEvent(event: Event): Promise<boolean> {
     // TODO добавить notifications
+
+    const d = event.getDate();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0"); // месяцы с 0
+    const day = String(d.getDate()).padStart(2, "0");
+
+    const formatted = `${year}-${month}-${day}`;
+
     try {
       const response = await fetch(`api/event/create/`, {
         method: "POST",
@@ -246,8 +254,8 @@ export class Profile {
         body: JSON.stringify({
           name: event.getTitle(),
           description: event.getDescription(),
-          date: event.getDate(),
-          time_startw: event.getStartTime(),
+          date: formatted,
+          time_start: event.getStartTime(),
           time_end: event.getEndTime(),
           recurrence_rule_type: event.getRecurrenceInterval(),
           recurrence_rule_interval: event.getRecurrenceValue(),

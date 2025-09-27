@@ -35,7 +35,6 @@ const emit = defineEmits<{
   (e: "filtersReady", filters: PersonFilter[]): void;
 }>();
 
-// ToDo: адаптировать под изменения фильтра
 function onSearch() {
   console.log("ClickedSearch");
   const filters: PersonFilter[] = [
