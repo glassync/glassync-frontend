@@ -1,16 +1,44 @@
 <template>
   <div class="container-fluid mt-3">
-    <div class="row">
-      <div class="col-3 d-flex flex-column" style="height: 90vh">
+    <div class="row" style="height: 90vh">
+      <div class="col-3 d-flex flex-column">
         <button class="btn btn-primary mb-3" @click="goToCreateEvent">
           Создать событие
         </button>
+
+        <!-- Новые поля диапазона здесь -->
+        <div class="d-flex gap-2 mb-3 align-items-end">
+          <div class="flex-grow-1">
+            <label for="startDate" class="form-label">Начало</label>
+            <input
+              id="startDate"
+              type="date"
+              class="form-control"
+              v-model="manualStartDate"
+            />
+          </div>
+          <div class="flex-grow-1">
+            <label for="endDate" class="form-label">Конец</label>
+            <input
+              id="endDate"
+              type="date"
+              class="form-control"
+              v-model="manualEndDate"
+            />
+          </div>
+          <div>
+            <button class="btn btn-primary" @click="applyManualDateRange">
+              Найти
+            </button>
+          </div>
+        </div>
 
         <div class="flex-grow-1 overflow-auto">
           <EventList :title="'События'" :events="events" />
         </div>
       </div>
-      <div class="col-9" style="height: 90vh; overflow: auto">
+
+      <div class="col-9" style="overflow: auto">
         <vue-cal
           style="height: 100%"
           default-view="week"
@@ -44,16 +72,20 @@ const user = computed(() => props.profile.getAuthorizedUser());
 const searchStartDate = ref<Date>(new Date());
 const searchEndDate = ref<Date>(new Date());
 
+// Новые переменные для ручного ввода даты (строки формата yyyy-MM-dd)
+const manualStartDate = ref(formatDateInput(searchStartDate.value));
+const manualEndDate = ref(formatDateInput(searchEndDate.value));
+
 const eventsInstance = Events.getInstance();
 const events = ref<Event[]>([]);
 
-// Маппинг наших событий в формат vue-cal
+// Маппинг событий в формат vue-cal
 const vueCalEvents = computed(() => {
   return events.value.map((ev) => ({
     start: formatDateTime(ev.getDate(), ev.getStartTime()),
     end: formatDateTime(ev.getDate(), ev.getEndTime()),
     title: ev.getTitle(),
-    eventObj: ev, // можно передавать сам объект события для клика
+    eventObj: ev,
   }));
 });
 
@@ -61,11 +93,19 @@ watch(
   () => [user.value, searchStartDate.value, searchEndDate.value],
   () => {
     if (user.value && searchStartDate.value && searchEndDate.value) {
-      events.value = eventsInstance.getUserEvents(
-        user.value,
+      events.value = eventsInstance.getEvents(
         searchStartDate.value,
         searchEndDate.value
       );
+      // Но по идее можно и так:
+      // events.value = eventsInstance.getUserEvents(
+      //   user.value,
+      //   searchStartDate.value,
+      //   searchEndDate.value
+      // );
+      // Обновляем ручные поля под новые даты (если меняется диапазон не вручную)
+      manualStartDate.value = formatDateInput(searchStartDate.value);
+      manualEndDate.value = formatDateInput(searchEndDate.value);
     } else {
       events.value = [];
     }
@@ -79,7 +119,6 @@ function goToCreateEvent() {
   router.push("/event");
 }
 
-// Обработчик смены вида / диапазона дат в vue-cal
 function onViewChange({
   startDate,
   endDate,
@@ -89,13 +128,15 @@ function onViewChange({
 }) {
   searchStartDate.value = startDate;
   searchEndDate.value = endDate;
+  // Обновляем ручные поля тоже
+  manualStartDate.value = formatDateInput(startDate);
+  manualEndDate.value = formatDateInput(endDate);
 }
 
-// Вспомогательная функция для конвертации даты + времени в строку ISO
+// Конвертация для vue-cal ISO с временем
 function formatDateTime(date: Date, timeStr: string): string {
   if (!timeStr) return date.toISOString();
 
-  // timeStr ожидается в формате HH:mm
   const [hours, minutes] = timeStr.split(":").map(Number);
   const d = new Date(date);
   d.setHours(hours);
@@ -105,7 +146,28 @@ function formatDateTime(date: Date, timeStr: string): string {
   return d.toISOString();
 }
 
-// Обработчик клика по событию
+// Конвертация даты для <input type="date">: из Date в строку yyyy-MM-dd
+function formatDateInput(date: Date): string {
+  const d = new Date(date);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// Обработчик применения ручного диапазона по кнопке
+function applyManualDateRange() {
+  const start = new Date(manualStartDate.value);
+  const end = new Date(manualEndDate.value);
+
+  if (start <= end) {
+    searchStartDate.value = start;
+    searchEndDate.value = end;
+  } else {
+    alert("Дата начала не может быть позже даты окончания");
+  }
+}
+
 function onCellClick(event: any) {
   if (event?.eventObj) {
     console.log("Клик по событию:", event.eventObj);
