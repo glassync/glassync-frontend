@@ -244,7 +244,7 @@ watch(
     const user = props.profile.getAuthorizedUser();
     if (event) {
       isEditMode.value = true;
-      isCreator.value = user?.getUserUID() === event.getCreatorUID();
+      isCreator.value = user?.getUserUID() === event.getCreatorID();
 
       form.name = event.getTitle();
       form.description = event.getDescription();
@@ -372,7 +372,7 @@ function buildEvent(): Event {
   const eventObj = new Event();
 
   if (isEditMode.value && props.event) {
-    eventObj.setUID(props.event.getUID());
+    eventObj.setUID(props.event.getUID()); // TODO
   }
 
   eventObj.setTitle(form.name.trim());
@@ -428,6 +428,7 @@ async function onSave() {
   if (!validate()) return;
 
   const eventObj = buildEvent();
+  console.log(eventObj);
   const success = await props.profile.updateEvent(eventObj);
 
   if (success) {

@@ -6,26 +6,27 @@
 
 <script setup lang="ts">
 import type { Profile } from "@/core/Profile";
-import type { Event } from "@/core/Event";
+import { Event } from "@/core/Event";
 import { ref, watch, defineProps } from "vue";
 import EventForm from "@/components/EventSettingsForm.vue";
 import { Events } from "@/core/Events";
+import { useRoute } from "vue-router";
 
 const props = defineProps<{
   profile: Profile;
-  eventUID?: number | string;
+  eventUID?: number;
 }>();
 
 const event = ref<Event | null>(null);
+const route = useRoute(); // Получаем доступ к маршруту
 
-const events = Events.getInstance();
-
+console.log("EvenetID " + props.eventUID);
 watch(
   () => props.eventUID,
-  (uid) => {
+  async (uid) => {
     if (uid !== undefined) {
-      const numericUID = Number(uid);
-      const findEvent = events.getEvent(numericUID);
+      console.log("EVENT_UID " + uid);
+      const findEvent = await Event.getEventsByIDs(uid);
       event.value = findEvent ?? null;
     } else {
       event.value = null;
