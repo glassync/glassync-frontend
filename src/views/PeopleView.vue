@@ -30,7 +30,7 @@
     </div>
 
     <div class="col-4 d-flex flex-column">
-      <h4 class="mb-3 text-center">Заявки в друзья</h4>
+      <h4 class="mb-3 text-center">Отправленные заявки в друзья</h4>
       <PeopleList
         :profile="profile"
         :pendingResponses="pendingResponses"
