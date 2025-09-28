@@ -1,7 +1,7 @@
 <template>
   <div
     class="card p-3"
-    style="width: 360px; max-height: 80vh; overflow-y: auto"
+    style="max-height: 80vh; overflow-y: auto; overflow-x: auto"
   >
     <div class="card-header text-center" style="background-color: #f8f9fa">
       <h5 class="mb-0">Выбор платформы для уведомлений</h5>
