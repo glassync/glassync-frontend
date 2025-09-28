@@ -58,7 +58,7 @@ import { useRouter } from "vue-router";
 import EventList from "@/components/EventList.vue";
 import { Events } from "@/core/Events";
 import type { Profile } from "@/core/Profile";
-import type { Event } from "@/core/Event";
+import { Event } from "@/core/Event";
 
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -163,6 +163,10 @@ function applyManualDateRange() {
   if (start <= end) {
     searchStartDate.value = start;
     searchEndDate.value = end;
+    const userID = user.value?.getUserUID();
+
+    if (userID !== undefined) Event.getEvents(userID, start, end);
+    else console.error("User ID is undefined");
   } else {
     alert("Дата начала не может быть позже даты окончания");
   }
