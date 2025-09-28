@@ -6,9 +6,8 @@
           Создать событие
         </button>
 
-        <!-- Новые поля диапазона здесь -->
-        <div class="d-flex gap-2 mb-3 mt-4 align-items-end">
-          <div class="flex-grow-1">
+        <div class="date-range-wrapper mb-3 mt-4">
+          <div class="mb-2">
             <label for="startDate" class="form-label">Начало</label>
             <input
               id="startDate"
@@ -17,7 +16,7 @@
               v-model="manualStartDate"
             />
           </div>
-          <div class="flex-grow-1">
+          <div>
             <label for="endDate" class="form-label">Конец</label>
             <input
               id="endDate"
@@ -26,9 +25,10 @@
               v-model="manualEndDate"
             />
           </div>
-        </div>
-        <div class="pb-3">
-          <button class="btn btn-primary" @click="applyManualDateRange">
+          <button
+            class="btn btn-primary mt-3 w-100"
+            @click="applyManualDateRange"
+          >
             Найти
           </button>
         </div>
@@ -174,3 +174,17 @@ function onCellClick(event: any) {
   }
 }
 </script>
+
+<style scoped>
+.date-range-wrapper {
+  max-width: 300px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+  .date-range-wrapper {
+    max-width: 100%;
+  }
+}
+</style>
