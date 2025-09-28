@@ -7,15 +7,17 @@
         :checked="platform.getIsActive()"
         @change="toggleActive"
       />
-      <span class="flex-shrink-0">{{ platform.getPlatformName() }}:</span>
-      <a
-        :href="platform.getIdentifier()"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-break"
-      >
-        {{ platform.getIdentifier() }}
-      </a>
+      <span class="flex-shrink-0 fw-bold">{{
+        platform.getPlatformName()
+      }}</span>
+      <!--      <a-->
+      <!--        :href="platform.getIdentifier()"-->
+      <!--        target="_blank"-->
+      <!--        rel="noopener noreferrer"-->
+      <!--        class="text-break"-->
+      <!--      >-->
+      <!--        {{ platform.getIdentifier() }}-->
+      <!--      </a>-->
     </div>
   </div>
 </template>
