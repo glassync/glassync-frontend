@@ -76,8 +76,8 @@
         <router-link to="/authorization" class="navbar-icon-btn" title="Вход">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="24"
+            height="24"
             fill="currentColor"
             class="bi bi-person-circle"
             viewBox="0 0 16 16"
@@ -96,8 +96,8 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="24"
+            height="24"
             fill="currentColor"
             class="bi bi-box-arrow-in-right"
             viewBox="0 0 16 16"
