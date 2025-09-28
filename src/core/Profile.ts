@@ -234,8 +234,6 @@ export class Profile {
   // region Редактирование профиля
 
   public async updateProfile(person: Person): Promise<boolean> {
-    if (!this.isAuthorized) return false;
-
     const newFirstName = person.getFirstName();
     const newLastName = person.getLastName();
     const newNickname = person.getNickname();
@@ -299,8 +297,8 @@ export class Profile {
     const day = String(d.getDate()).padStart(2, "0");
 
     const formatted = `${year}-${month}-${day}`;
-    const eventMembers = event.getMembers();
-    const memberIds = Array.from(eventMembers.keys());
+    // const eventMembers = event.getMembers();
+    // const memberIds = Array.from(eventMembers.keys());
 
     try {
       const response = await fetch(`api/event/create/`, {
@@ -316,7 +314,7 @@ export class Profile {
           time_end: event.getEndTime(),
           recurrence_rule_type: event.getRecurrenceInterval(),
           recurrence_rule_interval: event.getRecurrenceValue(),
-          notifications: memberIds,
+          notifications: event.getNotifications(),
         }),
       });
 
@@ -338,8 +336,8 @@ export class Profile {
     const day = String(d.getDate()).padStart(2, "0");
 
     const formatted = `${year}-${month}-${day}`;
-    const eventMembers = event.getMembers();
-    const memberIds = Array.from(eventMembers.keys());
+    // const eventMembers = event.getMembers();
+    // const memberIds = Array.from(eventMembers.keys());
 
     try {
       const response = await fetch(`api/event/update/`, {
@@ -356,7 +354,7 @@ export class Profile {
           time_end: event.getEndTime(),
           recurrence_rule_type: event.getRecurrenceInterval(),
           recurrence_rule_interval: event.getRecurrenceValue(),
-          notifications: memberIds,
+          notifications: event.getNotifications(),
         }),
       });
       return true;
