@@ -28,9 +28,21 @@ const props = defineProps<{
   platform: NotificationPlatform;
 }>();
 
-function toggleActive(event: Event) {
+async function toggleActive(event: Event) {
   const checkbox = event.target as HTMLInputElement;
   props.platform.setIsActive(checkbox.checked);
+
+  try {
+    const profile = props.platform.getProfile();
+    const success = await profile.updateNotificationPlatforms();
+
+    if (!success) {
+      alert("Не удалось обновить настройки уведомлений");
+    }
+  } catch (error) {
+    console.error("Ошибка при обновлении платформ:", error);
+    alert("Произошла ошибка при обновлении");
+  }
 }
 </script>
 
