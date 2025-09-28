@@ -263,7 +263,7 @@ watch(
         form.repeatIntervalType = RecurrenceInterval.DAILY;
       }
 
-      const remindTimes = event.getReminderTimes();
+      const remindTimes = event.getNotifications();
       if (remindTimes && remindTimes.length > 0) {
         form.remind = true;
         form.remindMinutes = remindTimes[0];
@@ -297,14 +297,17 @@ watch(
         );
 
         form.invited = {};
+
         for (const friend of allFriends) {
           form.invited[friend.getUserUID()] =
             membersMap.get(friend.getUserUID()) ?? false;
         }
-
+        console.log(allFriends);
+        console.log(form.invited);
         selectedParticipants.value = allFriends.filter(
           (uid) => form.invited[uid.getUserUID()]
         );
+        console.log(selectedParticipants.value);
       } else {
         selectableFriends.value = [];
         selectedParticipants.value = [];
@@ -387,9 +390,9 @@ function buildEvent(): Event {
   }
 
   if (form.remind && form.remindMinutes > 0) {
-    eventObj.setReminderTimes([form.remindMinutes]);
+    eventObj.setNotifications([form.remindMinutes]);
   } else {
-    eventObj.setReminderTimes([]);
+    eventObj.setNotifications([]);
   }
 
   const membersMap = new Map<number, boolean>();
@@ -415,6 +418,7 @@ async function onCreate() {
   if (!validate()) return;
 
   const eventObj = buildEvent();
+  console.log(eventObj);
   const success = await props.profile.createEvent(eventObj);
 
   if (success) {
