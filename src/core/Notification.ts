@@ -1,32 +1,31 @@
 import { NotificationType } from "./Enum";
 
 export class Notification {
-    private timestamp: Date;
-    private type: NotificationType;
+  private timestamp: Date;
+  private type: NotificationType;
 
-    constructor(type: NotificationType, timestamp?: Date) {
-        this.type = type;
-        this.timestamp = timestamp || new Date();
-    }
+  constructor(type: NotificationType, timestamp?: Date) {
+    this.type = type;
+    this.timestamp = timestamp || new Date();
+  }
 
-    getTimestamp(): Date {
-        return this.timestamp;
-    }
+  public getTimestamp(): Date {
+    return this.timestamp;
+  }
 
-    getType(): NotificationType {
-        return this.type;
-    }
+  public getType(): NotificationType {
+    return this.type;
+  }
 
-    setTimestamp(timestamp: Date): void {
-        this.timestamp = timestamp;
-    }
+  public setTimestamp(timestamp: Date): void {
+    this.timestamp = timestamp;
+  }
 
-    setType(type: NotificationType): void {
-        this.type = type;
-    }
+  public setType(type: NotificationType): void {
+    this.type = type;
+  }
 
-    toString(): string {
-        return `[${this.type}] ${this.timestamp.toISOString()}`;
-    }
+  toString(): string {
+    return `[${this.type}] ${this.timestamp.toISOString()}`;
+  }
 }
-
