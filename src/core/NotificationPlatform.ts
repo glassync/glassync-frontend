@@ -1,50 +1,62 @@
 export class NotificationPlatform {
-    private platformUID: number;
-    private platformName: string;
-    private isActive: boolean;
-    private identifier: string;
+  private platformUID: number;
+  private platformName: string;
+  private isActive: boolean;
+  private identifier: string;
 
-    constructor(
-        platformUID: number,
-        platformName: string,
-        isActive: boolean,
-        identifier: string
-    ) {
-        this.platformUID = platformUID;
-        this.platformName = platformName;
-        this.isActive = isActive;
-        this.identifier = identifier;
-    }
+  constructor(
+    platformUID: number,
+    platformName: string,
+    isActive: boolean,
+    identifier: string
+  ) {
+    this.platformUID = platformUID;
+    this.platformName = platformName;
+    this.isActive = isActive;
+    this.identifier = identifier;
+  }
 
-    getPlatformUID(): number {
-        return this.platformUID;
-    }
+  public getPlatformUID(): number {
+    return this.platformUID;
+  }
 
-    getPlatformName(): string {
-        return this.platformName;
-    }
+  public getPlatformName(): string {
+    return this.platformName;
+  }
 
-    getIsActive(): boolean {
-        return this.isActive;
-    }
+  public getIsActive(): boolean {
+    return this.isActive;
+  }
 
-    getIdentifier(): string {
-        return this.identifier;
-    }
+  public getIdentifier(): string {
+    return this.identifier;
+  }
 
-    setPlatformUID(uid: number): void {
-        this.platformUID = uid;
-    }
+  public setPlatformUID(uid: number): void {
+    this.platformUID = uid;
+  }
 
-    setPlatformName(name: string): void {
-        this.platformName = name;
-    }
+  public setPlatformName(name: string): void {
+    this.platformName = name;
+  }
 
-    setIsActive(active: boolean): void {
-        this.isActive = active;
-    }
+  public setIsActive(active: boolean): void {
+    this.isActive = active;
+  }
 
-    setIdentifier(id: string): void {
-        this.identifier = id;
-    }
+  public setIdentifier(id: string): void {
+    this.identifier = id;
+  }
+
+  public activate(): void {
+    // TODO
+    // На диаграмме нет, но как будто бы нужно добавить
+    // this.active = true;
+  }
+
+  public deactivate(): void {
+    // TODO
+    // На диаграмме нет, но как будто бы нужно добавить
+    // this.active = false;
+  }
 }
