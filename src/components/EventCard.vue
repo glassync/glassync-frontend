@@ -49,8 +49,8 @@
                   confirmed ? 'bg-success' : 'bg-secondary',
                 ]"
               >
-                {{ person.getName().charAt(0).toUpperCase() }} // ToDo картинка
-                профиля
+                {{ person.getName().charAt(0).toUpperCase() }}
+                <!-- ToDo: аватар -->
               </span>
               {{ person.getName() }} {{ person.getSurname() }}
             </span>
@@ -61,43 +61,31 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { Event } from "@/core/Event";
 import type { Person } from "@/core/Person";
-import { defineComponent, PropType } from "vue";
+import { useRouter } from "vue-router";
+import { defineProps } from "vue";
 
-export default defineComponent({
-  name: "MyComponent",
-  props: {
-    event: {
-      type: Object as PropType<Event>,
-      required: true,
-    },
-    members: {
-      type: Object as PropType<Map<Person, boolean>>,
-      required: true,
-    }, // ToDo: убрать, брать участников из события
-  },
-  setup(props) {
-    function openDetails() {
-      // ToDo: обработка клика на шестерёнку, открытия редактирования события
-      alert("Переход на представление редактирования события");
-    }
+const props = defineProps<{
+  event: Event;
+  members: Map<Person, boolean>; // ToDo: убрать, брать участников из события
+}>();
 
-    function formatDate(date: Date): string {
-      return date.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
-    }
+const router = useRouter();
 
-    return {
-      openDetails,
-      formatDate,
-    };
-  },
-});
+function openDetails() {
+  // ToDo: логика перехода на страницу редактирования события
+  router.push(`/events/edit/${props.event.getUID()}`);
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
 </script>
 
 <style scoped>
