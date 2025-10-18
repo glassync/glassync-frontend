@@ -1,8 +1,12 @@
+import { Profile } from "./Profile";
+import { Person } from "./Person";
+
 class People {
   private static instance: People | null = null;
   //private people: Person[] = [];
   private profile: Profile;
 
+  // TODO почему профиль?
   private constructor(profile: Profile) {
     this.profile = profile;
   }
