@@ -7,12 +7,7 @@
         </button>
 
         <div class="flex-grow-1 overflow-auto">
-          <EventList
-            :title="'События дня'"
-            :user="user"
-            :searchStartDate="searchStartDate"
-            :searchEndDate="searchEndDate"
-          />
+          <EventList :title="'События дня'" :events="events" />
         </div>
       </div>
       <div class="col-9" style="height: 90vh; overflow: auto">
@@ -23,38 +18,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import EventList from "@/components/EventList.vue";
 import Calendar from "@/components/Calendar.vue";
+import { Events } from "@/core/Events";
 import { Person } from "@/core/Person";
+import type { Event } from "@/core/Event";
 
 // ToDo: человека брать из профиля, но откуда брать профиль?
-// Заглушка для человека
 const user = new Person(1, "Коля", "Иванов", "kolya", "kolya@example.com");
 
 // ToDo: ещё нужно брать диапазон поиска событий, его из календаря брать?
 // Заглушки для дат диапазона
 const now = new Date();
-const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const endOfDay = new Date(
-  now.getFullYear(),
-  now.getMonth(),
-  now.getDate(),
-  23,
-  59,
-  59
+const searchStartDate = ref(new Date(now.setHours(0, 0, 0, 0)));
+const searchEndDate = ref(new Date(now.setHours(23, 59, 59, 999)));
+
+const events = ref<Event[]>([]);
+const eventsInstance = Events.getInstance();
+
+watch(
+  [searchStartDate, searchEndDate],
+  () => {
+    events.value = eventsInstance.getUserEvents(
+      user,
+      searchStartDate.value,
+      searchEndDate.value
+    );
+  },
+  { immediate: true }
 );
-
-const searchStartDate = ref<Date>(startOfDay);
-const searchEndDate = ref<Date>(endOfDay);
-
-const router = useRouter();
-
-function goToCreateEvent() {
-  // ToDo: логика перехода на страницу редактирования события
-  router.push("/events/create");
-}
 
 function onDateRangeChanged({
   startDate,
@@ -65,5 +59,11 @@ function onDateRangeChanged({
 }) {
   searchStartDate.value = startDate;
   searchEndDate.value = endDate;
+}
+
+const router = useRouter();
+function goToCreateEvent() {
+  // ToDo: логика перехода на страницу редактирования события
+  router.push("/events/create");
 }
 </script>
