@@ -1,23 +1,11 @@
 export class Person {
-  private userUID: number;
-  private firstName: string;
-  private lastName: string;
-  private nickname: string;
-  private email: string;
-
-  constructor(
-    userUID: number,
-    firstName: string,
-    lastName: string,
-    nickname: string,
-    email: string
-  ) {
-    this.userUID = userUID;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.nickname = nickname;
-    this.email = email;
-  }
+  public constructor(
+    private userUID: number = 0,
+    private firstName: string = "",
+    private lastName: string = "",
+    private nickname: string = "",
+    private email: string = ""
+  ) {}
 
   public getUserUID(): number {
     return this.userUID;
@@ -62,5 +50,15 @@ export class Person {
     } else {
       throw new Error("Invalid email format");
     }
+  }
+
+  // friend_request_sent - запрос отправлен
+  // friend_request_alredy_sent - запрос уже отправлен
+  // user_not_found - пользователя не существует
+  // not_friends - разрыв связи друзей
+  // decline_friendship - отклонить заявку
+  // accept_friendship - принять заявку
+  public doFriendAction(action: string, user_id: number): string | undefined {
+    return "";
   }
 }
