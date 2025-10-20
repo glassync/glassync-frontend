@@ -1,5 +1,7 @@
 import { NotificationPlatform } from "./NotificationPlatform";
 import { Person } from "./Person";
+import { People } from "./People";
+import config from "./config.json";
 
 export class Profile {
   private static instance: Profile;
@@ -8,60 +10,141 @@ export class Profile {
   private notifications: Notification[] = [];
   private notificationPlatforms: NotificationPlatform[] = [];
 
-  // TODO решить проблему с конструктором синглтон
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private constructor() {}
+  private constructor() {
+    // Инициализация если нужно будет
+  }
 
   public static getInstance(): Profile {
     if (!Profile.instance) {
       Profile.instance = new Profile();
+      Profile.instance.isAuthorized = false;
+      Profile.instance.authorizedUser = null;
+      Profile.instance.notifications = [];
+      Profile.instance.notificationPlatforms = [];
     }
     return Profile.instance;
   }
-  // private constructor(
-  //   isAuthorized: boolean | false,
-  //   authorizedUser: Person | null,
-  //   notifications: Notification[],
-  //   notificationPlatforms: NotificationPlatform[]
-  // ) {
-  //   this.isAuthorized = isAuthorized;
-  //   this.authorizedUser = authorizedUser;
-  //   this.notifications = notifications;
-  //   this.notificationPlatforms = notificationPlatforms;
-  // }
-  //
-  // public static getInstance(): Profile {
-  //   if (!Profile.instance) {
-  //     Profile.instance = new Profile(
-  //       this.isAuthorized,
-  //       this.authorizedUser,
-  //       this.notifications,
-  //       this.notificationPlatforms
-  //     );
-  //   }
-  //   return Profile.instance;
-  // }
 
-  public login(login: string, password: string): boolean {
-    // Логика авторизации
-    this.isAuthorized = true; // Флаг авторизации
-    return this.isAuthorized;
+  public async login(login: string, password: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${config.url}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: login,
+          password: password,
+        }),
+      });
+
+      const currentUserFilter = new PersonFilter(undefined, undefined, login);
+      const currentPerson = People.getPeopleByFilter(currentUserFilter);
+      return this.handleAuthResponse(response, currentPerson[0]);
+    } catch (error) {
+      this.isAuthorized = false;
+      console.error("Ошибка сети:", error);
+      return false;
+    }
   }
 
-  public register(person: Person, password: string): boolean {
-    // Логика регистрации
-    return true; // Флаг регистрации true/false
+  public async register(person: Person, password: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${config.url}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstname: person.getFirstName(),
+          lastname: person.getLastName(),
+          email: person.getEmail(),
+          password: password,
+        }),
+      });
+
+      return this.handleAuthResponse(response, person);
+    } catch (error) {
+      this.isAuthorized = false;
+      this.authorizedUser = null;
+      console.error("Ошибка сети:", error);
+      return false;
+    }
   }
 
-  public logout(): void {
-    this.isAuthorized = false;
-    this.authorizedUser = null;
+  public async logout(): Promise<void> {
+    try {
+      // TODO нужно ли апи вовсе?
+      const response = await fetch(`${config.url}/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      this.isAuthorized = false;
+      this.authorizedUser = null;
+
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Ошибка при выходе:", error);
+      this.isAuthorized = false;
+      this.authorizedUser = null;
+
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
   }
 
-  public updateProfile(person: Person): boolean {
+  public async updateProfile(person: Person): Promise<boolean> {
     if (!this.isAuthorized) return false;
-    // Логика обновления данных
-    return true;
+
+    const newFirstName = person.getFirstName();
+    const newLastName = person.getLastName();
+    const newNickname = person.getNickname();
+    const newEmail = person.getEmail();
+
+    if (!newFirstName && !newLastName && !newNickname && !newEmail) {
+      console.error("Не указано ни одного поля для обновления");
+      return false;
+    }
+
+    try {
+      const uid = this.authorizedUser?.getUserUID();
+      if (!uid) return false;
+
+      const response = await fetch(`${config.url}/user/update}`, {
+        method: "PATCH", // PUT или PATCH в зависимости от реализации в бэке
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: newFirstName,
+          lastName: newLastName,
+          nickname: newNickname,
+          email: newEmail,
+          // password: person.password,
+        }),
+      });
+
+      if (response.ok) {
+        if (newFirstName != undefined)
+          this.authorizedUser?.setFirstName(newFirstName);
+        if (newLastName != undefined)
+          this.authorizedUser?.setFirstName(newFirstName);
+        if (newNickname != undefined)
+          this.authorizedUser?.setNickname(newNickname);
+        if (newEmail != undefined) this.authorizedUser?.setEmail(newEmail);
+
+        return true;
+      } else {
+        console.error("Ошибка обновления профиля:", response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error("Ошибка сети при обновлении профиля:", error);
+      return false;
+    }
   }
 
   public changePassword(currentPassword: string, newPassword: string): boolean {
@@ -88,5 +171,27 @@ export class Profile {
     return this.notificationPlatforms.find(
       (platform) => platform.getPlatformUID() === UID
     );
+  }
+
+  // Вспомогательные методы
+
+  private handleAuthResponse(response: Response, person: Person): boolean {
+    if (response.ok) {
+      this.isAuthorized = true;
+      this.authorizedUser = person;
+      window.location.href = "/";
+      return true;
+    }
+
+    this.isAuthorized = false;
+    this.authorizedUser = null;
+
+    if (response.status === 400) {
+      console.error("Ошибка авторизации: неверные данные");
+      return false;
+    }
+
+    console.error("Ошибка сервера:", response.status);
+    return false;
   }
 }
