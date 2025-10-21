@@ -1,5 +1,4 @@
 import { Person } from "./Person";
-import config from "./config.json";
 import { PersonFilter } from "./PersonFilter";
 
 export class People {
@@ -27,7 +26,7 @@ export class People {
 
   public static async getPersonByUID(UID: number): Promise<Person | undefined> {
     try {
-      const response = await fetch(`${config.url}/user/get`, {
+      const response = await fetch(`api/user/get`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +61,6 @@ export class People {
     }
   }
 
-  // TODO friend list
   // People.getPeopleByFilter(new PersonFilter(undefiend, undefiend, undefiend, undefiend, FRIEND))
   public static async getPeopleByFilter(
     filter: PersonFilter
@@ -91,7 +89,7 @@ export class People {
     }
 
     try {
-      const response = await fetch(`${config.url}/user/get`, {
+      const response = await fetch(`api/user/get`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,10 +152,4 @@ export class People {
       console.error("Ошибка при обработке ошибки API:", error);
     }
   }
-
-  // TODO отправить заявку в друзья и принять/отклонить
-
-  // TODO установить/разорвать связь
-
-  // TODO добавить/удалить друга
 }
