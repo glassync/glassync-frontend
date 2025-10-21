@@ -61,12 +61,11 @@ export class People {
     }
   }
 
-  // People.getPeopleByFilter(new PersonFilter(undefiend, undefiend, undefiend, undefiend, FRIEND))
+  // Usage example - People.getPeopleByFilter(new PersonFilter(undefiend, undefiend, undefiend, FRIEND))
   public static async getPeopleByFilter(
     filter: PersonFilter
   ): Promise<Person[] | []> {
-    const name = filter.getName();
-    const surname = filter.getSurname();
+    const FIO = filter.getFIO();
     const email = filter.getEmail();
     const nickname = filter.getNickname();
     const relation = filter.getRelation();
@@ -74,12 +73,9 @@ export class People {
     let currentFilterType = "all";
     let currentFilterString = "";
 
-    if (name != undefined) {
-      currentFilterType = "first_name";
-      currentFilterString = name;
-    } else if (surname != undefined) {
-      currentFilterType = "last_name";
-      currentFilterString = surname;
+    if (FIO != undefined) {
+      currentFilterType = "first_name"; // TODO какой тип фильтра для фио в бд
+      currentFilterString = FIO;
     } else if (email != undefined) {
       currentFilterType = "email";
       currentFilterString = email;
