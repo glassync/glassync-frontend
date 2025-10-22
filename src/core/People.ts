@@ -58,8 +58,10 @@ export class People {
           userData.nickname,
           userData.email
         );
+      } else {
+        return undefined;
       }
-      return undefined;
+      // ToDo: Чуть-чуть для себя повысил читаемость, не сразу понял почему возвращается undefuned. Просто удалить это ToDo.
     } catch (error) {
       console.error("Ошибка сети:", error);
       return undefined;
