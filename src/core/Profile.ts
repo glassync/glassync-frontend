@@ -4,15 +4,14 @@ import { People } from "./People";
 import { PersonFilter } from "./PersonFilter";
 
 export class Profile {
-  private static instance: Profile;
   private isAuthorized = false;
   private authorizedUser: Person | null = null;
   private notifications: Notification[] = [];
   private notificationPlatforms: NotificationPlatform[] = [];
 
-  private constructor() {
-    // Инициализация если нужно будет
-  }
+  // region Singleton
+
+  private static instance: Profile;
 
   public static getInstance(): Profile {
     if (!Profile.instance) {
@@ -25,11 +24,52 @@ export class Profile {
     return Profile.instance;
   }
 
+  // endregion
+
+  // region Конструкторы
+
+  private constructor() {
+    // Инициализация если нужно будет
+  }
+
+  // endregion
+
+  // region Геттеры
+
+  public getAuthorizedUser(): Person | null {
+    return this.authorizedUser;
+  }
+
+  public getNotifications(): Notification[] {
+    return this.notifications;
+  }
+
+  public getNotificationPlatforms(): NotificationPlatform[] {
+    return this.notificationPlatforms;
+  }
+
+  public getNotificationPlatform(
+    UID: number
+  ): NotificationPlatform | undefined {
+    return this.notificationPlatforms.find(
+      (platform) => platform.getPlatformUID() === UID
+    );
+  }
+
+  // endregion
+
+  // region Сеттеры
+
+  // ToDo: что за антипаттерны, методы для тестов. Предлагаю такое удалить)
   // для теста
   public setPerson(person: Person): void {
     this.authorizedUser = person;
     this.isAuthorized = true;
   }
+
+  // endregion
+
+  // region Авторизация
 
   public async login(login: string, password: string): Promise<boolean> {
     try {
@@ -102,6 +142,33 @@ export class Profile {
     }
   }
 
+  private async handleAuthResponse(
+    response: Response,
+    person: Person
+  ): Promise<boolean> {
+    if (response.ok) {
+      this.isAuthorized = true;
+      this.authorizedUser = person;
+      window.location.href = "/";
+      return true;
+    }
+
+    this.isAuthorized = false;
+    this.authorizedUser = null;
+
+    if (response.status === 400) {
+      console.error("Ошибка авторизации: неверные данные");
+      return false;
+    }
+
+    console.error("Ошибка сервера:", response.status);
+    return false;
+  }
+
+  // endregion
+
+  // region Редактирование профиля
+
   public async updateProfile(person: Person): Promise<boolean> {
     if (!this.isAuthorized) return false;
 
@@ -158,48 +225,5 @@ export class Profile {
     return true;
   }
 
-  public getAuthorizedUser(): Person | null {
-    return this.authorizedUser;
-  }
-
-  public getNotifications(): Notification[] {
-    return this.notifications;
-  }
-
-  public getNotificationPlatforms(): NotificationPlatform[] {
-    return this.notificationPlatforms;
-  }
-
-  public getNotificationPlatform(
-    UID: number
-  ): NotificationPlatform | undefined {
-    return this.notificationPlatforms.find(
-      (platform) => platform.getPlatformUID() === UID
-    );
-  }
-
-  // Вспомогательные методы
-
-  private async handleAuthResponse(
-    response: Response,
-    person: Person
-  ): Promise<boolean> {
-    if (response.ok) {
-      this.isAuthorized = true;
-      this.authorizedUser = person;
-      window.location.href = "/";
-      return true;
-    }
-
-    this.isAuthorized = false;
-    this.authorizedUser = null;
-
-    if (response.status === 400) {
-      console.error("Ошибка авторизации: неверные данные");
-      return false;
-    }
-
-    console.error("Ошибка сервера:", response.status);
-    return false;
-  }
+  // endregion
 }
