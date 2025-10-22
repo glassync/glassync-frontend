@@ -120,7 +120,7 @@ export class Profile {
       if (!uid) return false;
 
       const response = await fetch(`api/user/update`, {
-        method: "PATCH", // PUT или PATCH в зависимости от реализации в бэке
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
