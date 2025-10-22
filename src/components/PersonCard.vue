@@ -111,21 +111,43 @@
           </svg>
         </button>
       </template>
+
+      <template v-else>
+        <input type="checkbox" v-model="checked" @change="emitChecked" />
+      </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, defineProps, defineEmits, watch } from "vue";
 import type { Person } from "@/core/Person";
-import { RelationToAuthorizedUser } from "@/core/Enum";
 import type { Profile } from "@/core/Profile";
-import { ref, defineProps } from "vue";
+import { RelationToAuthorizedUser } from "@/core/Enum";
 
 const props = defineProps<{
   person: Person;
-  relation: RelationToAuthorizedUser;
   profile: Profile;
+  relation?: RelationToAuthorizedUser;
+  defaultChecked?: boolean;
 }>();
+
+const emit = defineEmits<{
+  (e: "check", person: Person, checked: boolean): void;
+}>();
+
+const checked = ref(props.defaultChecked ?? false);
+
+watch(
+  () => props.defaultChecked,
+  (val) => {
+    checked.value = val ?? false;
+  }
+);
+
+function emitChecked() {
+  emit("check", props.person, checked.value);
+}
 
 const currentRelation = ref(props.relation);
 
