@@ -16,6 +16,11 @@ export class People {
     return People.instance;
   }
 
+  // ToDo: кажется этот метод не нужен будет. Если так и будет нужно удалить из истории. Пока пометил deprecated.
+  /**
+   * @deprecated
+   * @param person
+   */
   public addPerson(person: Person): void {
     this.people.push(person);
   }
