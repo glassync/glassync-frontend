@@ -16,14 +16,14 @@
         <img :src="intersectIcon" alt="Стекляши" class="nav-image" />
         <span>Стекляши</span>
       </router-link>
-      <router-link to="/people" class="navbar-item">
+      <router-link to="/friends" class="navbar-item">
         <img :src="peopleFillIcon" alt="Друзья" class="nav-image" />
         <span>Друзья</span>
       </router-link>
     </div>
 
     <div class="navbar-right">
-      <router-link to="/profile" class="navbar-icon-btn" title="Аккаунт">
+      <router-link to="/account" class="navbar-icon-btn" title="Аккаунт">
         <img :src="personCircleIcon" alt="Аккаунт" class="nav-icon" />
       </router-link>
       <router-link to="/login" class="navbar-icon-btn" title="Вход">
