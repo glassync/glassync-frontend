@@ -129,7 +129,6 @@ export class Profile {
           lastName: newLastName,
           nickname: newNickname,
           email: newEmail,
-          // password: person.password,
         }),
       });
 
