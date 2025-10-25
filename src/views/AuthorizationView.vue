@@ -20,7 +20,6 @@ const router = useRouter();
 defineProps<{ profile: Profile }>();
 
 function goToRegister() {
-  // ToDo: логика перехода на страницу регистрации
-  router.push("/register");
+  router.push("/registration");
 }
 </script>
