@@ -1,30 +1,62 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Calendar from "../components/Calendar.vue";
-import FriendsPage from "../views/PeopleView.vue";
-import UserProfile from "../views/ProfileView.vue";
-import GlassiesPage from "../views/GlassiesView.vue";
 
-// Явная типизация маршрутов
+import AuthorizationView from "../views/AuthorizationView.vue";
+import MainView from "../views/MainView.vue";
+import PeopleView from "../views/PeopleView.vue";
+import ProfileView from "../views/ProfileView.vue";
+import RegistrationView from "../views/RegistrationView.vue";
+import EditProfileView from "../views/EditProfileView.vue";
+import EventView from "../views/EventView.vue";
+import GlassiesView from "../views/GlassiesView.vue";
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Calendar",
-    component: Calendar,
+    name: "Main",
+    component: MainView,
+    props: true,
+  },
+  {
+    path: "/authorization",
+    name: "Authorization",
+    component: AuthorizationView,
+    props: true,
   },
   {
     path: "/friends",
     name: "Friends",
-    component: FriendsPage,
+    component: PeopleView,
+    props: true,
   },
   {
     path: "/account",
     name: "Account",
-    component: UserProfile,
+    component: ProfileView,
+    props: true,
+  },
+  {
+    path: "/registration",
+    name: "Registration",
+    component: RegistrationView,
+    props: true,
+  },
+  {
+    path: "/edit-profile",
+    name: "EditProfile",
+    component: EditProfileView,
+    props: true,
+  },
+  {
+    path: "/event",
+    name: "Event",
+    component: EventView,
+    props: true,
   },
   {
     path: "/glassies",
     name: "Glassies",
-    component: GlassiesPage,
+    component: GlassiesView,
+    props: true,
   },
 ];
 
