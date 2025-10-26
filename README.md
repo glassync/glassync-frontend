@@ -20,5 +20,10 @@ npm run build
 npm run lint
 ```
 
+### Testing TS classes (Event.ts for example)
+```
+tsc Event.test.ts --module commonjs; node Event.test.js
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -1,19 +1,41 @@
+import { Profile } from "@/core/Profile";
+
 export class NotificationPlatform {
   private platformUID: number;
   private platformName: string;
   private isActive: boolean;
   private identifier: string;
+  private notifications: Notification[];
+  private profile: Profile;
+
+  // region Конструкторы
 
   constructor(
     platformUID: number,
     platformName: string,
     isActive: boolean,
-    identifier: string
+    identifier: string,
+    notifications: Notification[],
+    profile: Profile
   ) {
     this.platformUID = platformUID;
     this.platformName = platformName;
     this.isActive = isActive;
     this.identifier = identifier;
+    this.notifications = notifications;
+    this.profile = profile;
+  }
+
+  // endregion
+
+  // region Геттеры
+
+  public getProfile(): Profile {
+    return this.profile;
+  }
+
+  public getNotifications(): Notification[] {
+    return this.notifications;
   }
 
   public getPlatformUID(): number {
@@ -32,6 +54,14 @@ export class NotificationPlatform {
     return this.identifier;
   }
 
+  // endregion
+
+  // region Сеттер
+
+  public setProfile(newProfile: Profile): void {
+    this.profile = newProfile;
+  }
+
   public setPlatformUID(uid: number): void {
     this.platformUID = uid;
   }
@@ -48,6 +78,9 @@ export class NotificationPlatform {
     this.identifier = id;
   }
 
+  // endregion
+
+  // ToDo: сделайте просто setActive
   public activate(): void {
     // TODO
     // На диаграмме нет, но как будто бы нужно добавить
