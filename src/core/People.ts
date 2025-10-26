@@ -46,7 +46,7 @@ export class People {
 
   public static async getPersonByUID(UID: number): Promise<Person | undefined> {
     try {
-      const response = await fetch(`api/user/get`, {
+      const response = await fetch(`api/user/get/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ export class People {
     }
 
     try {
-      const response = await fetch(`api/user/get`, {
+      const response = await fetch(`api/user/get/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -79,7 +79,7 @@ export class Person {
     user_id: number
   ): Promise<string | undefined> {
     try {
-      const response = await fetch(`api/user/action`, {
+      const response = await fetch(`api/user/action/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
