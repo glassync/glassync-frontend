@@ -40,19 +40,13 @@
           class="dropdown-menu overflow-auto"
           style="max-height: 150px; width: 200px"
         >
-          <li v-for="(confirmed, person) in members" :key="person.getUID()">
+          <li v-for="person in event.getMembers()" :key="person.getUserUID()">
             <span class="dropdown-item d-flex align-items-center">
-              <span
-                :class="[
-                  'me-2',
-                  'badge',
-                  confirmed ? 'bg-success' : 'bg-secondary',
-                ]"
-              >
-                {{ person.getName().charAt(0).toUpperCase() }}
-                <!-- ToDo: аватар -->
+              <span class="me-2 badge bg-secondary">
+                {{ person.getFirstName().charAt(0).toUpperCase() }}
+                <!-- аватар сюда, если есть -->
               </span>
-              {{ person.getName() }} {{ person.getSurname() }}
+              {{ person.getFirstName() }} {{ person.getLastName() }}
             </span>
           </li>
         </ul>
@@ -63,13 +57,11 @@
 
 <script setup lang="ts">
 import type { Event } from "@/core/Event";
-import type { Person } from "@/core/Person";
 import { useRouter } from "vue-router";
 import { defineProps } from "vue";
 
 const props = defineProps<{
   event: Event;
-  members: Map<Person, boolean>; // ToDo: убрать, брать участников из события
 }>();
 
 const router = useRouter();
