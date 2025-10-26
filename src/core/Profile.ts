@@ -2,6 +2,7 @@ import { NotificationPlatform } from "./NotificationPlatform";
 import { Person } from "./Person";
 import { People } from "./People";
 import { PersonFilter } from "./PersonFilter";
+import { RelationToAuthorizedUser } from "@/core/Enum";
 
 export class Profile {
   private isAuthorized = false;
@@ -84,7 +85,12 @@ export class Profile {
         }),
       });
 
-      const currentUserFilter = new PersonFilter(undefined, undefined, login);
+      const currentUserFilter = new PersonFilter(
+        undefined,
+        undefined,
+        login,
+        RelationToAuthorizedUser.userself
+      );
       const currentPerson = await People.getPeopleByFilter(currentUserFilter);
       return await this.handleAuthResponse(response, currentPerson[0]);
     } catch (error) {
@@ -102,8 +108,8 @@ export class Profile {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstname: person.getFirstName(),
-          lastname: person.getLastName(),
+          first_name: person.getFirstName(),
+          last_name: person.getLastName(),
           email: person.getEmail(),
           password: password,
         }),
@@ -120,7 +126,6 @@ export class Profile {
 
   public async logout(): Promise<void> {
     try {
-      // TODO нужно ли апи вовсе?
       const response = await fetch(`api/auth/logout/`, {
         method: "POST",
         headers: {
@@ -130,8 +135,6 @@ export class Profile {
 
       this.isAuthorized = false;
       this.authorizedUser = null;
-
-      // window.location.href = "/account";
     } catch (error) {
       console.error("Ошибка при выходе:", error);
       this.isAuthorized = false;
@@ -149,7 +152,6 @@ export class Profile {
     if (response.ok) {
       this.isAuthorized = true;
       this.authorizedUser = person;
-      window.location.href = "/";
       return true;
     }
 
@@ -192,8 +194,8 @@ export class Profile {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: newFirstName,
-          lastName: newLastName,
+          first_name: newFirstName,
+          last_name: newLastName,
           nickname: newNickname,
           email: newEmail,
         }),
