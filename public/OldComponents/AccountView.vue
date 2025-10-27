@@ -4,7 +4,7 @@
   <div v-else-if="user" class="profile-page">
     <div class="profile-header">
       <div class="avatar-container">
-        <img src="/public/images/ava.jpg" alt="Аватар" class="avatar" />
+        <img src="/images/ava.jpg" alt="Аватар" class="avatar" />
         <button @click="changeAvatar" class="avatar-edit-btn">✏️</button>
       </div>
       <h1>{{ user.fullName }}</h1>
