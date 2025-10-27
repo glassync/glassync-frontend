@@ -1,5 +1,4 @@
 import { RecurrenceInterval } from "./Enum";
-import { Person } from "@/core/Person";
 
 export class Event {
   private uid = 0;
@@ -8,8 +7,8 @@ export class Event {
   private date: Date = new Date();
   private startTime = "";
   private endTime = "";
-  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE;
-  private recurrenceValue = 0;
+  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.DAILY;
+  private recurrenceValue = 1;
   private members: Map<number, boolean> = new Map();
 
   // region Конструкторы
