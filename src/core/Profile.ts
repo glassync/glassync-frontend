@@ -235,7 +235,7 @@ export class Profile {
   }
 
   // endregion
-  async createEvent(event: Event) {
+  public async createEvent(event: Event): Promise<boolean> {
     // TODO добавить notifications
     try {
       const response = await fetch(`api/event/create/`, {
@@ -254,13 +254,15 @@ export class Profile {
           notifications: [],
         }),
       });
+      return true;
       // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
     } catch (error) {
       console.error("Ошибка создания события: ", error);
+      return false;
     }
   }
 
-  async updateEvent(event: Event) {
+  public async updateEvent(event: Event): Promise<boolean> {
     // TODO добавить notifications
     try {
       const response = await fetch(`api/event/update/`, {
@@ -274,13 +276,15 @@ export class Profile {
           notifications: [],
         }),
       });
+      return true;
       // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
     } catch (error) {
       console.error("Ошибка обновления события: ", error);
+      return false;
     }
   }
 
-  async removeEvent(event: Event) {
+  public async removeEvent(event: Event): Promise<boolean> {
     try {
       const response = await fetch(`api/event/delete/`, {
         method: "POST",
@@ -291,12 +295,14 @@ export class Profile {
           event_id: event.getUID(),
         }),
       });
+      return true;
     } catch (error) {
       console.error("Ошибка удаления события: ", error);
+      return false;
     }
   }
 
-  async quitEvent(event: Event) {
+  public async quitEvent(event: Event): Promise<boolean> {
     try {
       const response = await fetch(`api/event/action/`, {
         method: "POST",
@@ -308,8 +314,10 @@ export class Profile {
           action: "quit",
         }),
       });
+      return true;
     } catch (error) {
       console.error("Ошибка выхода из события: ", error);
+      return false;
     }
   }
 }
