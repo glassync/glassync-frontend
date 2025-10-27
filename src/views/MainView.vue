@@ -7,7 +7,7 @@
         </button>
 
         <!-- Новые поля диапазона здесь -->
-        <div class="d-flex gap-2 mb-3 align-items-end">
+        <div class="d-flex gap-2 mb-3 mt-4 align-items-end">
           <div class="flex-grow-1">
             <label for="startDate" class="form-label">Начало</label>
             <input
@@ -26,11 +26,11 @@
               v-model="manualEndDate"
             />
           </div>
-          <div>
-            <button class="btn btn-primary" @click="applyManualDateRange">
-              Найти
-            </button>
-          </div>
+        </div>
+        <div class="pb-3">
+          <button class="btn btn-primary" @click="applyManualDateRange">
+            Найти
+          </button>
         </div>
 
         <div class="flex-grow-1 overflow-auto">
