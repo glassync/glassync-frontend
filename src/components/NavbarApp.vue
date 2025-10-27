@@ -51,9 +51,9 @@
             </svg>
           </button>
 
-          <div v-if="showNotifications" class="notifications-dropdown">
-            <NotificationsList :profile="profile" />
-          </div>
+          <!--          <div v-if="showNotifications" class="notifications-dropdown">-->
+          <!--            <NotificationsList :profile="profile" />-->
+          <!--          </div>-->
         </div>
 
         <router-link to="/account" class="navbar-icon-btn" title="Аккаунт">
@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { ref, computed, defineProps } from "vue";
-import NotificationsList from "@/components/NotificationsList.vue";
+// import NotificationsList from "./components/NotificationsList.vue";
 
 interface Profile {
   getAuthorizedUser(): any | null;

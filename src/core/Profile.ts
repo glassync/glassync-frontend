@@ -2,6 +2,8 @@ import { NotificationPlatform } from "./NotificationPlatform";
 import { Person } from "./Person";
 import { People } from "./People";
 import { PersonFilter } from "./PersonFilter";
+import { Event } from "@/core/Event";
+import { RelationToAuthorizedUser } from "@/core/Enum";
 
 export class Profile {
   private isAuthorized = false;
@@ -84,7 +86,12 @@ export class Profile {
         }),
       });
 
-      const currentUserFilter = new PersonFilter(undefined, undefined, login);
+      const currentUserFilter = new PersonFilter(
+        undefined,
+        undefined,
+        login,
+        RelationToAuthorizedUser.userself
+      );
       const currentPerson = await People.getPeopleByFilter(currentUserFilter);
       return await this.handleAuthResponse(response, currentPerson[0]);
     } catch (error) {
@@ -102,15 +109,18 @@ export class Profile {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstname: person.getFirstName(),
-          lastname: person.getLastName(),
+          first_name: person.getFirstName(),
+          last_name: person.getLastName(),
+          nickname: person.getNickname(),
           email: person.getEmail(),
           password: password,
         }),
       });
 
-      return await this.handleAuthResponse(response, person);
+      const loggedIn = await this.login(person.getEmail(), password);
+      return loggedIn ? true : false;
     } catch (error) {
+      localStorage.removeItem("userID");
       this.isAuthorized = false;
       this.authorizedUser = null;
       console.error("Ошибка сети:", error);
@@ -120,7 +130,6 @@ export class Profile {
 
   public async logout(): Promise<void> {
     try {
-      // TODO нужно ли апи вовсе?
       const response = await fetch(`api/auth/logout/`, {
         method: "POST",
         headers: {
@@ -129,13 +138,13 @@ export class Profile {
       });
 
       this.isAuthorized = false;
+      localStorage.removeItem("userID");
       this.authorizedUser = null;
-
-      // window.location.href = "/account";
     } catch (error) {
       console.error("Ошибка при выходе:", error);
       this.isAuthorized = false;
       this.authorizedUser = null;
+      localStorage.removeItem("userID");
 
       localStorage.removeItem("token");
       window.location.href = "/login";
@@ -147,9 +156,9 @@ export class Profile {
     person: Person
   ): Promise<boolean> {
     if (response.ok) {
+      localStorage.setItem("userID", person.getUserUID().toString());
       this.isAuthorized = true;
       this.authorizedUser = person;
-      window.location.href = "/";
       return true;
     }
 
@@ -192,8 +201,8 @@ export class Profile {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: newFirstName,
-          lastName: newLastName,
+          first_name: newFirstName,
+          last_name: newLastName,
           nickname: newNickname,
           email: newEmail,
         }),
@@ -226,4 +235,89 @@ export class Profile {
   }
 
   // endregion
+  public async createEvent(event: Event): Promise<boolean> {
+    // TODO добавить notifications
+    try {
+      const response = await fetch(`api/event/create/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: event.getTitle(),
+          description: event.getDescription(),
+          date: event.getDate(),
+          time_startw: event.getStartTime(),
+          time_end: event.getEndTime(),
+          recurrence_rule_type: event.getRecurrenceInterval(),
+          recurrence_rule_interval: event.getRecurrenceValue(),
+          notifications: [],
+        }),
+      });
+      return true;
+      // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
+    } catch (error) {
+      console.error("Ошибка создания события: ", error);
+      return false;
+    }
+  }
+
+  public async updateEvent(event: Event): Promise<boolean> {
+    // TODO добавить notifications
+    try {
+      const response = await fetch(`api/event/update/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+          name: event.getTitle(),
+          notifications: [],
+        }),
+      });
+      return true;
+      // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
+    } catch (error) {
+      console.error("Ошибка обновления события: ", error);
+      return false;
+    }
+  }
+
+  public async removeEvent(event: Event): Promise<boolean> {
+    try {
+      const response = await fetch(`api/event/delete/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+        }),
+      });
+      return true;
+    } catch (error) {
+      console.error("Ошибка удаления события: ", error);
+      return false;
+    }
+  }
+
+  public async quitEvent(event: Event): Promise<boolean> {
+    try {
+      const response = await fetch(`api/event/action/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+          action: "quit",
+        }),
+      });
+      return true;
+    } catch (error) {
+      console.error("Ошибка выхода из события: ", error);
+      return false;
+    }
+  }
 }
