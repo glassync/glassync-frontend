@@ -19,12 +19,13 @@
       <p class="username text-muted">@{{ user?.getNickname() }}</p>
     </div>
 
-    <NotificationPlatformList
-      :platforms="profile.getNotificationPlatforms()"
-      class="mb-4"
-    />
+    <div class="mb-4 py-4 platforms-centered">
+      <NotificationPlatformList
+        :platforms="profile.getNotificationPlatforms()"
+      />
+    </div>
 
-    <div class="d-grid gap-2">
+    <div class="btn-group-centered gap-3">
       <button @click="editProfile" class="btn btn-success btn-lg">
         Редактировать профиль
       </button>
@@ -46,7 +47,7 @@ const props = defineProps<{
 }>();
 
 const user = props.profile.getAuthorizedUser();
-const defaultAvatar = "/images/default-avatar.png"; // Todo: путь к дефолтному аватару
+const defaultAvatar = "/images/ava.jpg";
 
 function changeAvatar() {
   // Todo: Логика изменения аватара
@@ -54,8 +55,7 @@ function changeAvatar() {
 }
 
 function editProfile() {
-  // Todo: Логика редактирования профиля
-  alert("Редактировать профиль");
+  router.push("/edit-profile");
 }
 
 //TODO async func
@@ -83,5 +83,22 @@ async function logout() {
 }
 .username {
   font-size: 1.1rem;
+}
+
+.platforms-centered {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-group-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-group-centered > button {
+  width: auto;
+  min-width: 0;
 }
 </style>
