@@ -5,7 +5,6 @@ export class NotificationPlatform {
   private platformName: string;
   private isActive: boolean;
   private identifier: string;
-  private notifications: Notification[];
   private profile: Profile;
 
   // region Конструкторы
@@ -15,14 +14,12 @@ export class NotificationPlatform {
     platformName: string,
     isActive: boolean,
     identifier: string,
-    notifications: Notification[],
     profile: Profile
   ) {
     this.platformUID = platformUID;
     this.platformName = platformName;
     this.isActive = isActive;
     this.identifier = identifier;
-    this.notifications = notifications;
     this.profile = profile;
   }
 
@@ -32,10 +29,6 @@ export class NotificationPlatform {
 
   public getProfile(): Profile {
     return this.profile;
-  }
-
-  public getNotifications(): Notification[] {
-    return this.notifications;
   }
 
   public getPlatformUID(): number {
