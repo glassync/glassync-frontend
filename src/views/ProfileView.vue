@@ -28,9 +28,7 @@
     </div>
 
     <div class="mb-4 pb-4 platforms-centered">
-      <NotificationPlatformList
-        :platforms="profile.getNotificationPlatforms()"
-      />
+      <NotificationPlatformList :platforms="notificationPlatforms" />
     </div>
 
     <div class="btn-group-centered gap-3">
@@ -47,9 +45,10 @@
 <script setup lang="ts">
 import type { Profile } from "@/core/Profile";
 import NotificationPlatformList from "@/components/NotificationPlatformList.vue";
-import { defineProps } from "vue";
+import { defineProps, ref, onMounted } from "vue";
 import router from "@/router";
 import TelegramLoginWidget from "@/components/TelegramAuthWidget.vue";
+import type { NotificationPlatform } from "@/core/NotificationPlatform";
 
 const props = defineProps<{
   profile: Profile;
@@ -58,8 +57,14 @@ const props = defineProps<{
 const user = props.profile.getAuthorizedUser();
 const defaultAvatar = "/images/ava.jpg";
 
+const notificationPlatforms = ref<NotificationPlatform[]>([]);
+
+onMounted(async () => {
+  await props.profile.loadNotificationPlatforms();
+  notificationPlatforms.value = props.profile.getNotificationPlatforms();
+});
+
 function changeAvatar() {
-  // Todo: Логика изменения аватара
   alert("Изменить аватар");
 }
 
@@ -67,9 +72,7 @@ function editProfile() {
   router.push("/edit-profile");
 }
 
-//TODO async func
 async function logout() {
-  // Todo: Логика выхода из аккаунта
   alert("Выйти из аккаунта");
   await props.profile.logout();
   router.push("/authorization");

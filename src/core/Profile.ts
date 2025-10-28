@@ -50,12 +50,38 @@ export class Profile {
     return this.notificationPlatforms;
   }
 
-  public getNotificationPlatform(
-    UID: number
-  ): NotificationPlatform | undefined {
-    return this.notificationPlatforms.find(
-      (platform) => platform.getPlatformUID() === UID
-    );
+  public async loadNotificationPlatforms(): Promise<void> {
+    try {
+      const response = await fetch("api/notification/platform/get/", {
+        method: "GET", // или "POST", если API требует
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data?.notification_settings) {
+        console.error("Ошибка при получении настроек уведомлений");
+        return;
+      }
+
+      // Очистим и обновим
+      this.notificationPlatforms = [];
+
+      for (const item of data.notification_settings) {
+        const platform = new NotificationPlatform(
+          item.id,
+          "Телеграм",
+          item.active,
+          item.id_notification_platform,
+          this
+        );
+        this.notificationPlatforms.push(platform);
+      }
+    } catch (error) {
+      console.error("Ошибка загрузки настроек уведомлений:", error);
+    }
   }
 
   // endregion
