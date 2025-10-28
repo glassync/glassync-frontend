@@ -50,7 +50,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/event",
     name: "Event",
     component: EventView,
-    props: true,
+    props: (route) => ({
+      eventUID: route.query.eventUID,
+    }),
   },
   {
     path: "/glassies",

@@ -283,13 +283,16 @@ export class Profile {
           name: event.getTitle(),
           description: event.getDescription(),
           date: formatted,
-          time_start: event.getStartTime() + ":00",
-          time_end: event.getEndTime() + ":00",
+          time_start: event.getStartTime(),
+          time_end: event.getEndTime(),
           recurrence_rule_type: event.getRecurrenceInterval(),
           recurrence_rule_interval: event.getRecurrenceValue(),
           notifications: memberIds,
         }),
       });
+
+      const data = await response.json();
+      event.setUID(data.event_id);
       return true;
       // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
     } catch (error) {
@@ -300,6 +303,15 @@ export class Profile {
 
   public async updateEvent(event: Event): Promise<boolean> {
     // TODO добавить notifications
+    const d = event.getDate();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0"); // месяцы с 0
+    const day = String(d.getDate()).padStart(2, "0");
+
+    const formatted = `${year}-${month}-${day}`;
+    const eventMembers = event.getMembers();
+    const memberIds = Array.from(eventMembers.keys());
+
     try {
       const response = await fetch(`api/event/update/`, {
         method: "POST",
@@ -309,7 +321,13 @@ export class Profile {
         body: JSON.stringify({
           event_id: event.getUID(),
           name: event.getTitle(),
-          notifications: [],
+          description: event.getDescription(),
+          date: formatted,
+          time_start: event.getStartTime(),
+          time_end: event.getEndTime(),
+          recurrence_rule_type: event.getRecurrenceInterval(),
+          recurrence_rule_interval: event.getRecurrenceValue(),
+          notifications: memberIds,
         }),
       });
       return true;

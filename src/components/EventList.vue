@@ -13,7 +13,7 @@ import type { Event } from "@/core/Event";
 import EventCard from "./EventCard.vue";
 import { defineProps } from "vue";
 
-defineProps<{
+const props = defineProps<{
   title: string;
   events: Event[];
 }>();
