@@ -57,7 +57,7 @@ const props = defineProps({
   noRelations: { type: Array as () => Person[], default: () => [] },
   sentRequests: { type: Array as () => Person[], default: () => [] },
   selectable: { type: Array as () => Person[], default: () => [] },
-  maxHeight: { type: Number, default: 400 },
+  maxHeight: { type: Number, default: 500 },
 });
 
 const selectedPeopleMap = ref(new Map<number, boolean>());
