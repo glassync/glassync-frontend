@@ -98,7 +98,7 @@ export class Event {
     if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
       this.startTime = value;
     } else {
-      throw new Error('Неверный формат времени. Используйте "HH:mm"');
+      // throw new Error('Неверный формат времени. Используйте "HH:mm"');
     }
   }
 
@@ -106,7 +106,7 @@ export class Event {
     if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
       this.endTime = value;
     } else {
-      throw new Error('Неверный формат времени. Используйте "HH:mm"');
+      // throw new Error('Неверный формат времени. Используйте "HH:mm"');
     }
   }
 
@@ -120,6 +120,84 @@ export class Event {
     } else {
       throw new Error("Значение интервала не может быть отрицательным");
     }
+  }
+
+  public static async getEvents(
+    userID: number,
+    startDate: Date,
+    endDate: Date
+  ): Promise<Event[]> {
+    function formateDate(d: Date) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0"); // месяцы с 0
+      const day = String(d.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+    const response = await fetch(`api/event/get/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_uid: userID,
+        start_date: formateDate(startDate),
+        end_date: formateDate(endDate),
+        detailed: true,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Error in events");
+    }
+
+    const data = await response.json();
+
+    if (data.status !== 200) {
+      throw new Error(`API error: ${data.status}`);
+    }
+
+    const eventsObject = data.events;
+    const eventsArray: Event[] = [];
+
+    for (const key of Object.keys(eventsObject)) {
+      const eventData = eventsObject[key];
+      const event = new Event();
+
+      event.setUID(eventData.uid);
+      event.setTitle(eventData.name);
+      event.setDescription(eventData.description);
+
+      const dateTimeString = `${eventData.date}T${eventData.time_start}`;
+      event.setDate(new Date(dateTimeString));
+
+      event.setStartTime(eventData.time_start);
+      event.setEndTime(eventData.time_end);
+
+      event.setRecurrenceInterval(
+        Object.values(RecurrenceInterval).includes(
+          eventData.recurrence_rule_type as RecurrenceInterval
+        )
+          ? (eventData.recurrence_rule_type as RecurrenceInterval)
+          : RecurrenceInterval.NONE
+      );
+
+      event.setRecurrenceValue(eventData.recurrence_rule_interval || 1);
+
+      const eventMembers: Map<number, boolean> = new Map();
+      if (Array.isArray(eventData.notifications)) {
+        eventData.notifications.forEach((userId: number) => {
+          eventMembers.set(userId, true);
+        });
+      }
+
+      event.setMembers(eventMembers);
+
+      eventsArray.push(event);
+    }
+
+    return eventsArray;
   }
 
   // endregion
