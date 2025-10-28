@@ -23,8 +23,8 @@
     <div class="card-body">
       <p class="text-muted">
         {{ formatDate(props.event.getDate()) }} •
-        {{ props.event.getStartTime() }}–
-        {{ props.event.getEndTime() }}
+        {{ props.event.getStartTime().slice(0, -3) }} –
+        {{ props.event.getEndTime().slice(0, -3) }}
       </p>
       <p>{{ props.event.getDescription() }}</p>
 
