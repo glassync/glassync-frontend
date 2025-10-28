@@ -84,6 +84,35 @@ export class Profile {
     }
   }
 
+  public async updateNotificationPlatforms(): Promise<boolean> {
+    try {
+      const platformsPayload: Record<string, { active: boolean }> = {};
+
+      for (const platform of this.notificationPlatforms) {
+        const platformId = platform.getPlatformUID().toString();
+        platformsPayload[platformId] = { active: platform.getIsActive() };
+      }
+
+      const response = await fetch("api/notification/platform/update/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ platforms: platformsPayload }),
+      });
+
+      if (!response.ok) {
+        console.error("Ошибка при обновлении платформ:", response.statusText);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Сетевая ошибка при обновлении платформ:", error);
+      return false;
+    }
+  }
+
   // endregion
 
   // region Сеттеры
