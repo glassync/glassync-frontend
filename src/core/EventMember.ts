@@ -1,9 +1,11 @@
+import { Person } from "./Person";
+
 class EventMember {
   private user: Person;
-  private event: EventU;
+  private event: Event;
   private attendanceConfirmed = false;
 
-  constructor(user: Person, event: EventU) {
+  constructor(user: Person, event: Event) {
     this.user = user;
     this.event = event;
   }
