@@ -1,41 +1,66 @@
-class Person {
-  private UID: number;
-  private name: string;
-  private surname: string;
+export class Person {
+  private userUID: number;
+  private firstName: string;
+  private lastName: string;
   private nickname: string;
   private email: string;
 
   constructor(
-    UID: number,
-    name: string,
-    surname: string,
+    userUID: number,
+    firstName: string,
+    lastName: string,
     nickname: string,
     email: string
   ) {
-    this.UID = UID;
-    this.name = name;
-    this.surname = surname;
+    this.userUID = userUID;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.nickname = nickname;
     this.email = email;
   }
 
-  public get getUID(): number {
-    return this.UID;
+  public getUserUID(): number {
+    return this.userUID;
   }
 
-  public get getName(): string {
-    return this.name;
+  public getFirstName(): string {
+    return this.firstName;
   }
 
-  public get getSurname(): string {
-    return this.surname;
+  public getLastName(): string {
+    return this.lastName;
   }
 
-  public get getNickname(): string {
+  public getNickname(): string {
     return this.nickname;
   }
 
-  public get getEmail(): string {
+  public getEmail(): string {
     return this.email;
+  }
+
+  public setUserUID(uid: number): void {
+    this.userUID = uid;
+  }
+
+  public setFirstName(firstName: string): void {
+    this.firstName = firstName;
+  }
+
+  public setLastName(lastName: string): void {
+    this.lastName = lastName;
+  }
+
+  public setNickname(nickname: string): void {
+    this.nickname = nickname;
+  }
+
+  public setEmail(email: string): void {
+    // TODO Возможно необходимо какая-то валидация данных
+    if (email.includes("@")) {
+      this.email = email;
+    } else {
+      throw new Error("Invalid email format");
+    }
   }
 }
