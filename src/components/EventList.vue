@@ -1,0 +1,27 @@
+<template>
+  <div>
+    <h4 class="mb-3">{{ title }}</h4>
+    <div class="overflow-auto border rounded p-2" style="max-height: 400px">
+      <EventCard
+        v-for="event in events"
+        :key="event.getUID()"
+        :event="event"
+        :members="eventMembersMap.get(event.getUID()) || new Map()"
+      />
+      <p v-if="events.length === 0" class="text-muted">Нет событий</p>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { Event } from "@/core/Event";
+import type { Person } from "@/core/Person";
+import EventCard from "./EventCard.vue";
+import { defineProps } from "vue";
+
+const props = defineProps<{
+  title: string;
+  events: Event[];
+  eventMembersMap: Map<number, Map<Person, boolean>>; // TODO: убрать, когда участники будут браться из события
+}>();
+</script>
