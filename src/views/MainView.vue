@@ -18,37 +18,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, computed, watch, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import EventList from "@/components/EventList.vue";
 import Calendar from "@/components/Calendar.vue";
 import { Events } from "@/core/Events";
-import { Person } from "@/core/Person";
+import type { Profile } from "@/core/Profile";
 import type { Event } from "@/core/Event";
 
-// ToDo: человека брать из профиля, но откуда брать профиль?
-const user = new Person(1, "Коля", "Иванов", "kolya", "kolya@example.com");
+const props = defineProps<{
+  profile: Profile;
+}>();
+
+const user = computed(() => props.profile.getAuthorizedUser());
 
 // ToDo: ещё нужно брать диапазон поиска событий, его из календаря брать?
 // Заглушки для дат диапазона
 const now = new Date();
-const searchStartDate = ref(new Date(now.setHours(0, 0, 0, 0)));
-const searchEndDate = ref(new Date(now.setHours(23, 59, 59, 999)));
+const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-const events = ref<Event[]>([]);
+const searchStartDate = ref<Date>(startOfDay);
+const searchEndDate = ref<Date>(endOfDay);
+
 const eventsInstance = Events.getInstance();
+const events = ref<Event[]>([]);
 
 watch(
-  [searchStartDate, searchEndDate],
+  () => [user.value, searchStartDate.value, searchEndDate.value],
   () => {
-    events.value = eventsInstance.getUserEvents(
-      user,
-      searchStartDate.value,
-      searchEndDate.value
-    );
+    if (user.value && searchStartDate.value && searchEndDate.value) {
+      events.value = eventsInstance.getUserEvents(
+        user.value,
+        searchStartDate.value,
+        searchEndDate.value
+      );
+    } else {
+      events.value = [];
+    }
   },
   { immediate: true }
 );
+
+const router = useRouter();
+function goToCreateEvent() {
+  // ToDo: логика перехода на страницу редактирования события
+  router.push("/events/create");
+}
 
 function onDateRangeChanged({
   startDate,
@@ -59,11 +75,5 @@ function onDateRangeChanged({
 }) {
   searchStartDate.value = startDate;
   searchEndDate.value = endDate;
-}
-
-const router = useRouter();
-function goToCreateEvent() {
-  // ToDo: логика перехода на страницу редактирования события
-  router.push("/events/create");
 }
 </script>
