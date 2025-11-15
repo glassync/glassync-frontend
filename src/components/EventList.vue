@@ -14,36 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Person } from "@/core/Person";
 import type { Event } from "@/core/Event";
 import EventCard from "./EventCard.vue";
-import { Events } from "@/core/Events";
-import { ref, watch, defineProps } from "vue";
+import { defineProps } from "vue";
 
-const props = defineProps<{
+defineProps<{
   title: string;
-  user: Person;
-  searchStartDate: Date;
-  searchEndDate: Date;
+  events: Event[];
 }>();
-
-const eventsInstance = Events.getInstance();
-
-const events = ref<Event[]>([]);
-
-watch(
-  () => [props.user, props.searchStartDate, props.searchEndDate],
-  () => {
-    if (props.user && props.searchStartDate && props.searchEndDate) {
-      events.value = eventsInstance.getUserEvents(
-        props.user,
-        props.searchStartDate,
-        props.searchEndDate
-      );
-    } else {
-      events.value = [];
-    }
-  },
-  { immediate: true }
-);
 </script>
