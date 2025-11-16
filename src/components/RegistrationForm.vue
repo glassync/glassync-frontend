@@ -55,13 +55,6 @@
       Зарегистрироваться
     </button>
 
-    <div class="mt-3 text-center">
-      <small>
-        Уже есть аккаунт?
-        <router-link to="/login">Войти</router-link>
-      </small>
-    </div>
-
     <div v-if="error" class="mt-1 text-danger text-center">
       {{ error }}
     </div>
