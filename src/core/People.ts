@@ -1,7 +1,7 @@
 import { Profile } from "./Profile";
 import { Person } from "./Person";
 
-class People {
+export class People {
   private static instance: People | null = null;
   //private people: Person[] = [];
   private profile: Profile;
@@ -24,7 +24,7 @@ class People {
     return undefined;
   }
 
-  public getPeopleByFilter(filter: PersonFilter): Person[] {
+  public static getPeopleByFilter(filter: PersonFilter): Person[] {
     // TODO
     return [];
   }
