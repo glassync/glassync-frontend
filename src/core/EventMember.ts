@@ -1,4 +1,5 @@
 import { Person } from "./Person";
+import { Event } from "./Event";
 
 class EventMember {
   private user: Person;
@@ -10,15 +11,65 @@ class EventMember {
     this.event = event;
   }
 
-  public confirmAttendance(): void {
-    // TODO
-    // На диаграмме нет, но как будто бы нужно добавить
-    this.attendanceConfirmed = true;
+  public async confirmAttendance(): Promise<void> {
+    try {
+      const response = await fetch(`api/event/action`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: this.event.getUID(),
+          action: "accept_invite",
+        }),
+      });
+
+      if (!response.ok) {
+        console.error("Ошибка api/event/action ", response.status);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.message == "Invitation accepted" && data.status == 200) {
+        this.attendanceConfirmed = true;
+      } else {
+        console.error(`${data.status}: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Ошибка сети:", error);
+      return;
+    }
   }
 
-  public cancelAttendance(): void {
-    // TODO
-    // На диаграмме нет, но как будто бы нужно добавить
-    this.attendanceConfirmed = false;
+  public async cancelAttendance(): Promise<void> {
+    try {
+      const response = await fetch(`api/event/action`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: this.event.getUID(),
+          action: "decline_invite",
+        }),
+      });
+
+      if (!response.ok) {
+        console.error("Ошибка api/event/action ", response.status);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.message == "Invitation declined" && data.status == 200) {
+        this.attendanceConfirmed = false;
+      } else {
+        console.error(`${data.status}: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Ошибка сети:", error);
+      return;
+    }
   }
 }
