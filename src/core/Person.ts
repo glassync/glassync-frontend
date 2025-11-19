@@ -58,7 +58,37 @@ export class Person {
   // not_friends - разрыв связи друзей
   // decline_friendship - отклонить заявку
   // accept_friendship - принять заявку
-  public doFriendAction(action: string, user_id: number): string | undefined {
-    return "";
+  public async doFriendAction(
+    action: string,
+    user_id: number
+  ): Promise<string | undefined> {
+    try {
+      const response = await fetch(`api/user/action`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: action,
+          user_id: user_id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Ошибка API user/action", response.status);
+        return undefined;
+      }
+
+      const userId = Object.keys(data.users)[0];
+      const userData = data.users[userId];
+
+      return userData.relationship_status;
+    } catch (error) {
+      console.error("Ошибка сети:", error);
+      return undefined;
+    }
+    return undefined;
   }
 }
