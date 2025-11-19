@@ -42,14 +42,33 @@ import { defineProps, computed } from "vue";
 import PersonCard from "./PersonCard.vue";
 import { RelationToAuthorizedUser } from "@/core/Enum";
 
-const props = defineProps<{
-  profile: Profile;
-  friends: Person[];
-  pending: Person[];
-  noRelation: Person[];
-  sentRequests: Person[];
-  maxHeight?: number; // px
-}>();
+const props = defineProps({
+  profile: {
+    type: Object as () => Profile,
+    required: true,
+  },
+  friends: {
+    type: Array as () => Person[],
+    default: () => [],
+  },
+  pending: {
+    type: Array as () => Person[],
+    default: () => [],
+  },
+  noRelation: {
+    type: Array as () => Person[],
+    default: () => [],
+  },
+  sentRequests: {
+    type: Array as () => Person[],
+    default: () => [],
+  },
+  maxHeight: {
+    type: Number,
+    required: false,
+    default: 400,
+  },
+});
 
 const isEmpty = computed(
   () =>
