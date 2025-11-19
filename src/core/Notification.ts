@@ -24,8 +24,4 @@ export class Notification {
   public setType(type: NotificationType): void {
     this.type = type;
   }
-
-  toString(): string {
-    return `[${this.type}] ${this.timestamp.toISOString()}`;
-  }
 }
