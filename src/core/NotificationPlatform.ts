@@ -1,19 +1,35 @@
+import { Profile } from "@/core/Profile";
+
 export class NotificationPlatform {
   private platformUID: number;
   private platformName: string;
   private isActive: boolean;
   private identifier: string;
+  private notifications: Notification[];
+  private profile: Profile;
 
   constructor(
     platformUID: number,
     platformName: string,
     isActive: boolean,
-    identifier: string
+    identifier: string,
+    notifications: Notification[],
+    profile: Profile
   ) {
     this.platformUID = platformUID;
     this.platformName = platformName;
     this.isActive = isActive;
     this.identifier = identifier;
+    this.notifications = notifications;
+    this.profile = profile;
+  }
+
+  public getProfile(): Profile {
+    return this.profile;
+  }
+
+  public getNotifications(): Notification[] {
+    return this.notifications;
   }
 
   public getPlatformUID(): number {
@@ -30,6 +46,10 @@ export class NotificationPlatform {
 
   public getIdentifier(): string {
     return this.identifier;
+  }
+
+  public setProfile(newProfile: Profile): void {
+    this.profile = newProfile;
   }
 
   public setPlatformUID(uid: number): void {
