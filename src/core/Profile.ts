@@ -1,7 +1,7 @@
 import { NotificationPlatform } from "./NotificationPlatform";
 import { Person } from "./Person";
 import { People } from "./People";
-import config from "./config.json";
+import { PersonFilter } from "./PersonFilter";
 
 export class Profile {
   private static instance: Profile;
@@ -25,9 +25,15 @@ export class Profile {
     return Profile.instance;
   }
 
+  // для теста
+  public setPerson(person: Person): void {
+    this.authorizedUser = person;
+    this.isAuthorized = true;
+  }
+
   public async login(login: string, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`${config.url}/auth/login`, {
+      const response = await fetch(`api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,8 +45,8 @@ export class Profile {
       });
 
       const currentUserFilter = new PersonFilter(undefined, undefined, login);
-      const currentPerson = People.getPeopleByFilter(currentUserFilter);
-      return this.handleAuthResponse(response, currentPerson[0]);
+      const currentPerson = await People.getPeopleByFilter(currentUserFilter);
+      return await this.handleAuthResponse(response, currentPerson[0]);
     } catch (error) {
       this.isAuthorized = false;
       console.error("Ошибка сети:", error);
@@ -50,7 +56,7 @@ export class Profile {
 
   public async register(person: Person, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`${config.url}/auth/signup`, {
+      const response = await fetch(`api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +69,7 @@ export class Profile {
         }),
       });
 
-      return this.handleAuthResponse(response, person);
+      return await this.handleAuthResponse(response, person);
     } catch (error) {
       this.isAuthorized = false;
       this.authorizedUser = null;
@@ -75,7 +81,7 @@ export class Profile {
   public async logout(): Promise<void> {
     try {
       // TODO нужно ли апи вовсе?
-      const response = await fetch(`${config.url}/auth/logout`, {
+      const response = await fetch(`api/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +119,7 @@ export class Profile {
       const uid = this.authorizedUser?.getUserUID();
       if (!uid) return false;
 
-      const response = await fetch(`${config.url}/user/update}`, {
+      const response = await fetch(`api/user/update}`, {
         method: "PATCH", // PUT или PATCH в зависимости от реализации в бэке
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +181,10 @@ export class Profile {
 
   // Вспомогательные методы
 
-  private handleAuthResponse(response: Response, person: Person): boolean {
+  private async handleAuthResponse(
+    response: Response,
+    person: Person
+  ): Promise<boolean> {
     if (response.ok) {
       this.isAuthorized = true;
       this.authorizedUser = person;
