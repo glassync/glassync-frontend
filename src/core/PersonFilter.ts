@@ -1,4 +1,6 @@
-class PersonFilter {
+import { RelationToAuthorizedUser } from "./Enum";
+
+export class PersonFilter {
   private name?: string;
   private surname?: string;
   private nickname?: string;
