@@ -10,6 +10,8 @@ export class Event {
   private recurrenceInterval: RecurrenceInterval;
   private recurrenceValue: number;
 
+  // region Конструкторы
+
   constructor(
     uid: number,
     title: string,
@@ -29,6 +31,10 @@ export class Event {
     this.recurrenceInterval = recurrenceInterval;
     this.recurrenceValue = recurrenceValue;
   }
+
+  // endregion
+
+  // region Геттеры
 
   public getUID(): number {
     return this.uid;
@@ -61,6 +67,10 @@ export class Event {
   public getRecurrenceValue(): number {
     return this.recurrenceValue;
   }
+
+  // endregion
+
+  // region Сеттеры
 
   public setUID(value: number) {
     this.uid = value;
@@ -105,4 +115,6 @@ export class Event {
       throw new Error("Значение интервала не может быть отрицательным");
     }
   }
+
+  // endregion
 }
