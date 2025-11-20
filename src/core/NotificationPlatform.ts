@@ -8,6 +8,8 @@ export class NotificationPlatform {
   private notifications: Notification[];
   private profile: Profile;
 
+  // region Конструкторы
+
   constructor(
     platformUID: number,
     platformName: string,
@@ -23,6 +25,10 @@ export class NotificationPlatform {
     this.notifications = notifications;
     this.profile = profile;
   }
+
+  // endregion
+
+  // region Геттеры
 
   public getProfile(): Profile {
     return this.profile;
@@ -48,6 +54,10 @@ export class NotificationPlatform {
     return this.identifier;
   }
 
+  // endregion
+
+  // region Сеттер
+
   public setProfile(newProfile: Profile): void {
     this.profile = newProfile;
   }
@@ -67,6 +77,8 @@ export class NotificationPlatform {
   public setIdentifier(id: string): void {
     this.identifier = id;
   }
+
+  // endregion
 
   // ToDo: сделайте просто setActive
   public activate(): void {
