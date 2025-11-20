@@ -6,6 +6,8 @@ export class PersonFilter {
   private email?: string;
   private relation?: RelationToAuthorizedUser;
 
+  // region Конструкторы
+
   constructor(
     FIO?: string,
     nickname?: string,
@@ -17,6 +19,10 @@ export class PersonFilter {
     this.email = email;
     this.relation = relation;
   }
+
+  // endregion
+
+  // region Геттеры
 
   public getFIO(): string | undefined {
     return this.FIO;
@@ -33,4 +39,6 @@ export class PersonFilter {
   public getRelation(): RelationToAuthorizedUser | undefined {
     return this.relation;
   }
+
+  // endregion
 }
