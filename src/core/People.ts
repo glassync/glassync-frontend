@@ -113,6 +113,11 @@ export class People {
 
       const peoples: Person[] = [];
 
+      /* ToDo {
+          Cмотрю на текущую структуру API и кажется этот метод не будет корректно работать.
+          Но возможно ошибаюсь. Нужно тестировать.
+          Может на итераторе написать?
+       }*/
       for (let i = 0; i < data.length; i++) {
         const userId = Object.keys(data.users)[i];
         const userData = data.users[userId];
