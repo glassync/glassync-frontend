@@ -130,8 +130,6 @@ export class People {
       console.error("Ошибка сети:", error);
       return [];
     }
-
-    return [];
   }
 
   // Вспомогательные методы
