@@ -1,4 +1,6 @@
 export class Person {
+  // region Конструкторы
+
   public constructor(
     private userUID: number = 0,
     private firstName: string = "",
@@ -6,6 +8,10 @@ export class Person {
     private nickname: string = "",
     private email: string = ""
   ) {}
+
+  // endregion
+
+  // region Геттеры
 
   public getUserUID(): number {
     return this.userUID;
@@ -26,6 +32,10 @@ export class Person {
   public getEmail(): string {
     return this.email;
   }
+
+  // endregion
+
+  // region Сеттеры
 
   public setUserUID(uid: number): void {
     this.userUID = uid;
@@ -51,6 +61,8 @@ export class Person {
       throw new Error("Invalid email format");
     }
   }
+
+  // endregion
 
   /* ToDo {
        Если этот метод отвечает за заявку в друзья он должен быть реализован в классе профиль.
