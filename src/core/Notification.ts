@@ -4,10 +4,16 @@ export class Notification {
   private timestamp: Date;
   private type: NotificationType;
 
+  // region Конструкторы
+
   constructor(type: NotificationType, timestamp?: Date) {
     this.type = type;
     this.timestamp = timestamp || new Date();
   }
+
+  // endregion
+
+  // region Геттеры
 
   public getTimestamp(): Date {
     return this.timestamp;
@@ -17,6 +23,10 @@ export class Notification {
     return this.type;
   }
 
+  // endregion
+
+  // region Сеттеры
+
   public setTimestamp(timestamp: Date): void {
     this.timestamp = timestamp;
   }
@@ -24,4 +34,6 @@ export class Notification {
   public setType(type: NotificationType): void {
     this.type = type;
   }
+
+  // endregion
 }
