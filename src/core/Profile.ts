@@ -119,7 +119,7 @@ export class Profile {
       const uid = this.authorizedUser?.getUserUID();
       if (!uid) return false;
 
-      const response = await fetch(`api/user/update}`, {
+      const response = await fetch(`api/user/update`, {
         method: "PATCH", // PUT или PATCH в зависимости от реализации в бэке
         headers: {
           "Content-Type": "application/json",
