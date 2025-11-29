@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Calendar from "../components/Calendar.vue";
-import FriendsPage from "../views/FriendView.vue";
-import UserProfile from "../views/AccountView.vue";
+import FriendsPage from "../views/PeopleView.vue";
+import UserProfile from "../views/ProfileView.vue";
 import GlassiesPage from "../views/GlassiesView.vue";
 
 // Явная типизация маршрутов
