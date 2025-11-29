@@ -64,7 +64,7 @@ export class Profile {
   // для теста
   public setPerson(person: Person): void {
     this.authorizedUser = person;
-    this.isAuthorized = true;
+    this.isAuthorized = false;
   }
 
   // endregion
@@ -73,7 +73,7 @@ export class Profile {
 
   public async login(login: string, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`api/auth/login`, {
+      const response = await fetch(`api/auth/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export class Profile {
 
   public async register(person: Person, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`api/auth/signup`, {
+      const response = await fetch(`api/auth/signup/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export class Profile {
   public async logout(): Promise<void> {
     try {
       // TODO нужно ли апи вовсе?
-      const response = await fetch(`api/auth/logout`, {
+      const response = await fetch(`api/auth/logout/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export class Profile {
       this.isAuthorized = false;
       this.authorizedUser = null;
 
-      window.location.href = "/login";
+      // window.location.href = "/account";
     } catch (error) {
       console.error("Ошибка при выходе:", error);
       this.isAuthorized = false;
