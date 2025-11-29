@@ -1,27 +1,28 @@
 <template>
-  <Navbar />
-  <router-view />
+  <Navbar :profile="profile" />
+  <div class="main-content">
+    <router-view :profile="profile" />
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import Navbar from "./components/Navbar.vue";
+<script setup lang="ts">
+import { reactive } from "vue";
+import { Profile } from "@/core/Profile";
+import Navbar from "@/components/Navbar.vue";
 
-export default defineComponent({
-  name: "App",
-  components: {
-    Navbar,
-  },
-});
+const profile = reactive(new Profile(/* параметры, если нужно */));
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
 }
 </style>
