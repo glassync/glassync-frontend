@@ -1,16 +1,18 @@
 <template>
-  <Navbar :profile="profile" />
-  <div class="main-content">
-    <router-view :profile="profile" />
+  <div id="app">
+    <NavbarApp :profile="profile" />
+    <div class="main-content">
+      <router-view :profile="profile" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { reactive } from "vue";
 import { Profile } from "@/core/Profile";
-import Navbar from "@/components/Navbar.vue";
+import NavbarApp from "@/components/NavbarApp.vue";
 
-const profile = reactive(new Profile(/* параметры, если нужно */));
+const profile = reactive(Profile.getInstance());
 </script>
 
 <style>
