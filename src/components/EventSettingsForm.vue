@@ -210,6 +210,7 @@ import { People } from "@/core/People";
 import { PersonFilter } from "@/core/PersonFilter";
 import { RelationToAuthorizedUser } from "@/core/Enum";
 import PeopleList from "@/components/PeopleList.vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   profile: Profile;
@@ -472,9 +473,9 @@ async function onQuit() {
   }
 }
 
+const router = useRouter();
 function goBack() {
-  // ToDo: логика перехода на главную страницу
-  window.history.back();
+  router.push("/");
 }
 </script>
 

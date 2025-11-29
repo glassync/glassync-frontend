@@ -25,7 +25,6 @@ defineProps<{
 const router = useRouter();
 
 function goBack() {
-  // ToDo: логика перехода на страницу профиля
-  router.push("/profile");
+  router.push("/account");
 }
 </script>
