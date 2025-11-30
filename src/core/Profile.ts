@@ -186,7 +186,7 @@ export class Profile {
       const uid = this.authorizedUser?.getUserUID();
       if (!uid) return false;
 
-      const response = await fetch(`api/user/update`, {
+      const response = await fetch(`api/user/update/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
