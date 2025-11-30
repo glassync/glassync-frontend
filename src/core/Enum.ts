@@ -25,4 +25,6 @@ export enum RelationToAuthorizedUser {
   SENT_FRIEND_REQUEST = "SENT_FRIEND_REQUEST",
   PENDING_RESPONSE_TO_REQUEST = "PENDING_RESPONSE_TO_REQUEST",
   FRIEND = "FRIEND",
+  all = "all",
+  userself = "self",
 }
