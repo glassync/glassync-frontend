@@ -75,8 +75,10 @@ const props = defineProps<{
 const router = useRouter();
 
 function openDetails() {
-  // ToDo: логика перехода на страницу редактирования события
-  router.push(`/events/edit/${props.event.getUID()}`);
+  router.push({
+    path: "/event",
+    query: { eventUID: props.event.getUID().toString() },
+  });
 }
 
 function formatDate(date: Date): string {
