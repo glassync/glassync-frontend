@@ -1,30 +1,31 @@
-class PersonFilter {
-  private name?: string;
-  private surname?: string;
+import { RelationToAuthorizedUser } from "./Enum";
+
+export class PersonFilter {
+  private FIO?: string;
   private nickname?: string;
   private email?: string;
   private relation?: RelationToAuthorizedUser;
 
+  // region Конструкторы
+
   constructor(
-    name?: string,
-    surname?: string,
+    FIO?: string,
     nickname?: string,
     email?: string,
     relation?: RelationToAuthorizedUser
   ) {
-    this.name = name;
-    this.surname = surname;
+    this.FIO = FIO;
     this.nickname = nickname;
     this.email = email;
     this.relation = relation;
   }
 
-  public getName(): string | undefined {
-    return this.name;
-  }
+  // endregion
 
-  public getSurname(): string | undefined {
-    return this.surname;
+  // region Геттеры
+
+  public getFIO(): string | undefined {
+    return this.FIO;
   }
 
   public getNickname(): string | undefined {
@@ -38,4 +39,6 @@ class PersonFilter {
   public getRelation(): RelationToAuthorizedUser | undefined {
     return this.relation;
   }
+
+  // endregion
 }

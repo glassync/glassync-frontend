@@ -7,8 +7,10 @@ export class Event {
   private date: Date;
   private startTime: string;
   private endTime: string;
-  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE;
-  private recurrenceValue = 0;
+  private recurrenceInterval: RecurrenceInterval;
+  private recurrenceValue: number;
+
+  // region Конструкторы
 
   constructor(
     uid: number,
@@ -18,18 +20,21 @@ export class Event {
     startTime: string,
     endTime: string,
     recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE,
-    recurrenceValue: number
+    recurrenceValue = 0
   ) {
     this.uid = uid;
     this.title = title;
     this.description = description;
     this.date = date;
-    this.recurrenceInterval = recurrenceInterval;
     this.startTime = startTime;
     this.endTime = endTime;
     this.recurrenceInterval = recurrenceInterval;
     this.recurrenceValue = recurrenceValue;
   }
+
+  // endregion
+
+  // region Геттеры
 
   public getUID(): number {
     return this.uid;
@@ -62,6 +67,10 @@ export class Event {
   public getRecurrenceValue(): number {
     return this.recurrenceValue;
   }
+
+  // endregion
+
+  // region Сеттеры
 
   public setUID(value: number) {
     this.uid = value;
@@ -106,4 +115,6 @@ export class Event {
       throw new Error("Значение интервала не может быть отрицательным");
     }
   }
+
+  // endregion
 }
