@@ -52,11 +52,11 @@ const form = reactive({
 
 const error = ref(false);
 
-function handleLogin() {
+//TODO async func
+async function handleLogin() {
   error.value = false;
 
-  const success = props.profile.login(form.email, form.password);
-
+  const success = await props.profile.login(form.email, form.password);
   if (success) {
     router.push("/");
   } else {

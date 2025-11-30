@@ -11,8 +11,11 @@
 import { reactive } from "vue";
 import { Profile } from "@/core/Profile";
 import NavbarApp from "@/components/NavbarApp.vue";
+import { People } from "@/core/People";
 
 const profile = reactive(Profile.getInstance());
+// const person = await People.getPersonByUID(6);
+// console.log(person);
 </script>
 
 <style>

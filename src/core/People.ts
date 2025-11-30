@@ -141,7 +141,8 @@ export class People {
           Но возможно ошибаюсь. Нужно тестировать.
           Может на итераторе написать?
        }*/
-      for (let i = 0; i < data.length; i++) {
+      const dataLength = Object.keys(data.users).length;
+      for (let i = 0; i < dataLength; i++) {
         const userId = Object.keys(data.users)[i];
         const userData = data.users[userId];
         peoples.push(

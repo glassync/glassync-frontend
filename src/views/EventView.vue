@@ -8,7 +8,7 @@
 import type { Profile } from "@/core/Profile";
 import type { Event } from "@/core/Event";
 import { ref, watch, defineProps } from "vue";
-import EventForm from "@/components/EventForm.vue";
+import EventForm from "@/components/EventSettingsForm.vue";
 import { Events } from "@/core/Events";
 
 const props = defineProps<{

@@ -25,6 +25,17 @@
     </div>
 
     <div class="mb-3">
+      <label for="nickname" class="form-label">Никнейм</label>
+      <input
+        v-model="form.nickname"
+        type="text"
+        class="form-control"
+        id="nickname"
+        placeholder="Введите отображаемый никнейм"
+      />
+    </div>
+
+    <div class="mb-3">
       <label for="email" class="form-label">Почта</label>
       <input
         v-model="form.email"
@@ -76,6 +87,7 @@ const router = useRouter();
 const form = reactive({
   firstName: "",
   lastName: "",
+  nickname: "",
   email: "",
   password: "",
 });
@@ -83,15 +95,22 @@ const form = reactive({
 const error = ref("");
 const loading = ref(false);
 
-function register() {
+async function register() {
   error.value = "";
   loading.value = true;
 
-  const newUser = new Person(0, form.firstName, form.lastName, "", form.email);
+  const newUser = new Person(
+    0,
+    form.firstName,
+    form.lastName,
+    form.nickname,
+    form.email
+  );
 
-  const success = props.profile.register(newUser, form.password);
+  const success = await props.profile.register(newUser, form.password);
 
   if (success) {
+    props.profile.setPerson(newUser);
     // ToDo: логика перехода на главную страницу после успешной регистрации
     router.push("/");
   } else {
