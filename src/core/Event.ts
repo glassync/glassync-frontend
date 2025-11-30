@@ -1,4 +1,5 @@
 import { RecurrenceInterval } from "./Enum";
+import { Person } from "@/core/Person";
 
 export class Event {
   private uid: number;
@@ -9,6 +10,7 @@ export class Event {
   private endTime: string;
   private recurrenceInterval: RecurrenceInterval;
   private recurrenceValue: number;
+  private members: Person[] = []; // Todo учесть, приспособить
 
   // region Конструкторы
 
@@ -66,6 +68,27 @@ export class Event {
 
   public getRecurrenceValue(): number {
     return this.recurrenceValue;
+  }
+
+  public getCreatorUID() {
+    return undefined;
+  }
+
+  public getReminderTimes() {
+    return [];
+  }
+
+  public getMembers(): Person[] {
+    return this.members || [];
+  }
+
+  public setReminderTimes(times: number[]): void {
+    // Заглушка: просто выводим в консоль
+    console.log("Установлены напоминания:", times);
+  }
+
+  public setMembers(members: Person[]) {
+    this.members = members;
   }
 
   // endregion
