@@ -2,6 +2,7 @@ import { NotificationPlatform } from "./NotificationPlatform";
 import { Person } from "./Person";
 import { People } from "./People";
 import { PersonFilter } from "./PersonFilter";
+import { Event } from "@/core/Event";
 import { RelationToAuthorizedUser } from "@/core/Enum";
 
 export class Profile {
@@ -234,4 +235,81 @@ export class Profile {
   }
 
   // endregion
+  async createEvent(event: Event) {
+    // TODO добавить notifications
+    try {
+      const response = await fetch(`api/event/create/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: event.getTitle(),
+          description: event.getDescription(),
+          date: event.getDate(),
+          time_startw: event.getStartTime(),
+          time_end: event.getEndTime(),
+          recurrence_rule_type: event.getRecurrenceInterval(),
+          recurrence_rule_interval: event.getRecurrenceValue(),
+          notifications: [],
+        }),
+      });
+      // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
+    } catch (error) {
+      console.error("Ошибка создания события: ", error);
+    }
+  }
+
+  async updateEvent(event: Event) {
+    // TODO добавить notifications
+    try {
+      const response = await fetch(`api/event/update/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+          name: event.getTitle(),
+          notifications: [],
+        }),
+      });
+      // TODO возможно нужно будет пушить в массив ивентов (скорее всего нет так как есть API)
+    } catch (error) {
+      console.error("Ошибка обновления события: ", error);
+    }
+  }
+
+  async removeEvent(event: Event) {
+    try {
+      const response = await fetch(`api/event/delete/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+        }),
+      });
+    } catch (error) {
+      console.error("Ошибка удаления события: ", error);
+    }
+  }
+
+  async quitEvent(event: Event) {
+    try {
+      const response = await fetch(`api/event/action/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_id: event.getUID(),
+          action: "quit",
+        }),
+      });
+    } catch (error) {
+      console.error("Ошибка выхода из события: ", error);
+    }
+  }
 }
