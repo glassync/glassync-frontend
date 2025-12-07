@@ -78,6 +78,9 @@ export class Person {
     action: string,
     user_id: number
   ): Promise<string | undefined> {
+    if (action == "send_friend_request") {
+      action = "request_friendship";
+    }
     try {
       const response = await fetch(`api/user/action/`, {
         method: "POST",

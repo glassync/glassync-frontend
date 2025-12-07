@@ -104,7 +104,7 @@ export class People {
 
     if (FIO != undefined) {
       // ToDo: я так понял ввели обозначение full_name для фамилии. Логику работы возможно стоит уточнить с Лизой.
-      currentFilterType = "first_name"; // TODO какой тип фильтра для фио в бд
+      currentFilterType = "full_name"; // TODO какой тип фильтра для фио в бд
       currentFilterString = FIO;
     } else if (email != undefined) {
       currentFilterType = "email";

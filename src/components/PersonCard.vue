@@ -150,13 +150,11 @@ function emitChecked() {
 }
 
 const currentRelation = ref(props.relation);
+const user = props.profile.getAuthorizedUser();
 
-function doAction(action: string) {
+async function doAction(action: string) {
   // ToDo: синхронизировать с готовой функцией
-  const result = props.profile.doFriendAction(
-    action,
-    props.person.getUserUID()
-  );
+  const result = await user.doFriendAction(action, props.person.getUserUID());
 
   if (
     result === "friend_request_sent" ||
@@ -170,8 +168,9 @@ function doAction(action: string) {
   }
 }
 
-function sendFriendRequest() {
-  doAction("send_friend_request");
+async function sendFriendRequest() {
+  await doAction("send_friend_request");
+  // TODO обновление модуля
 }
 
 function acceptFriendRequest() {
@@ -182,7 +181,8 @@ function declineFriendRequest() {
   doAction("decline_friend_request");
 }
 
-function removeFriend() {
-  doAction("remove_friend");
+async function removeFriend() {
+  await doAction("delete_friendship");
+  window.location.reload();
 }
 </script>

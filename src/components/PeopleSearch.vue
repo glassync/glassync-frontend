@@ -32,15 +32,15 @@ import { PersonFilter } from "@/core/PersonFilter";
 const searchText = ref("");
 
 const emit = defineEmits<{
-  (e: "search", filters: PersonFilter[]): void;
+  (e: "filtersReady", filters: PersonFilter[]): void;
 }>();
 
 // ToDo: адаптировать под изменения фильтра
 function onSearch() {
+  console.log("ClickedSearch");
   const filters: PersonFilter[] = [
     new PersonFilter(
       searchText.value,
-      undefined,
       undefined,
       undefined,
       RelationToAuthorizedUser.FRIEND
@@ -49,12 +49,10 @@ function onSearch() {
       searchText.value,
       undefined,
       undefined,
-      undefined,
       RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
     ),
     new PersonFilter(
       searchText.value,
-      undefined,
       undefined,
       undefined,
       RelationToAuthorizedUser.NO_RELATION
@@ -63,11 +61,10 @@ function onSearch() {
       searchText.value,
       undefined,
       undefined,
-      undefined,
       RelationToAuthorizedUser.SENT_FRIEND_REQUEST
     ),
   ];
 
-  emit("search", filters);
+  emit("filtersReady", filters);
 }
 </script>

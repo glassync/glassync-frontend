@@ -67,23 +67,22 @@ const searchNoRelations = ref<Person[]>([]);
 const searchSentRequests = ref<Person[]>([]);
 const searchResultsReady = ref(false);
 
-function loadFriends() {
+async function loadFriends() {
   const filter = new PersonFilter(
-    undefined,
     undefined,
     undefined,
     undefined,
     RelationToAuthorizedUser.FRIEND
   );
-  friends.value = peopleInstance.getPeopleByFilter(filter); //TODO static
+  friends.value = await People.getPeopleByFilter(filter); //TODO static
 }
 
-function loadFriendRequests() {
+async function loadFriendRequests() {
   const filterPending = new PersonFilter(
     undefined,
     undefined,
     undefined,
-    RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
+    RelationToAuthorizedUser.FRIEND_REQUEST_RECEIVED // поменял тут
   );
   const filterSent = new PersonFilter(
     undefined,
@@ -91,12 +90,14 @@ function loadFriendRequests() {
     undefined,
     RelationToAuthorizedUser.SENT_FRIEND_REQUEST
   );
-  pendingResponses.value = peopleInstance.getPeopleByFilter(filterPending);
-  sentRequests.value = peopleInstance.getPeopleByFilter(filterSent);
+  pendingResponses.value = await People.getPeopleByFilter(filterPending);
+  sentRequests.value = await People.getPeopleByFilter(filterSent);
 }
 
-function onFiltersReady(filters: PersonFilter[]) {
-  searchFriends.value = peopleInstance.getPeopleByFilter(
+async function onFiltersReady(filters: PersonFilter[]) {
+  console.log("Filters ready");
+  console.log(filters);
+  searchFriends.value = await People.getPeopleByFilter(
     filters.find((f) => f.getRelation() === RelationToAuthorizedUser.FRIEND) ??
       new PersonFilter(
         undefined,
@@ -105,7 +106,8 @@ function onFiltersReady(filters: PersonFilter[]) {
         RelationToAuthorizedUser.FRIEND
       )
   );
-  searchPendingResponses.value = peopleInstance.getPeopleByFilter(
+  console.log(searchFriends.value);
+  searchPendingResponses.value = await People.getPeopleByFilter(
     filters.find(
       (f) =>
         f.getRelation() === RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
@@ -117,7 +119,7 @@ function onFiltersReady(filters: PersonFilter[]) {
         RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST
       )
   );
-  searchNoRelations.value = peopleInstance.getPeopleByFilter(
+  searchNoRelations.value = await People.getPeopleByFilter(
     filters.find(
       (f) => f.getRelation() === RelationToAuthorizedUser.NO_RELATION
     ) ??
@@ -128,7 +130,8 @@ function onFiltersReady(filters: PersonFilter[]) {
         RelationToAuthorizedUser.NO_RELATION
       )
   );
-  searchSentRequests.value = peopleInstance.getPeopleByFilter(
+  console.log(searchNoRelations.value);
+  searchSentRequests.value = await People.getPeopleByFilter(
     filters.find(
       (f) => f.getRelation() === RelationToAuthorizedUser.SENT_FRIEND_REQUEST
     ) ??
