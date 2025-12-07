@@ -245,15 +245,13 @@ const validationErrors = reactive({
   date: "",
 });
 
-const peopleInstance = People.getInstance();
-
 const selectableFriends = ref<Person[]>([]);
 const eventParticipants = ref<Person[]>([]);
 const selectedParticipants = ref<Person[]>([]);
 
 watch(
   () => props.event,
-  (event) => {
+  async (event) => {
     const user = props.profile.getAuthorizedUser();
     if (event) {
       isEditMode.value = true;
@@ -289,12 +287,12 @@ watch(
         undefined,
         undefined,
         undefined,
-        undefined,
         RelationToAuthorizedUser.FRIEND
       );
-      const allFriends = peopleInstance.getPeopleByFilter(friendsFilter);
 
-      const membersMap = event.getMembersMap();
+      const allFriends = await People.getPeopleByFilter(friendsFilter);
+
+      const membersMap = event.getMembers();
       const participantsArr: Person[] = [];
       for (const [uid, included] of membersMap.entries()) {
         if (included) {
@@ -343,10 +341,9 @@ watch(
         undefined,
         undefined,
         undefined,
-        undefined,
         RelationToAuthorizedUser.FRIEND
       );
-      selectableFriends.value = peopleInstance.getPeopleByFilter(friendsFilter);
+      selectableFriends.value = await People.getPeopleByFilter(friendsFilter);
 
       eventParticipants.value = [];
       selectedParticipants.value = [];
@@ -413,12 +410,12 @@ function buildEvent(): Event {
       membersMap.set(person.getUserUID(), true);
     }
   } else if (isEditMode.value && props.event) {
-    const eventMembers = props.event.getMembersMap();
+    const eventMembers = props.event.getMembers();
     for (const [uid, included] of eventMembers.entries()) {
       membersMap.set(uid, included);
     }
   }
-  eventObj.setMembersMap(membersMap);
+  eventObj.setMembers(membersMap);
 
   return eventObj;
 }

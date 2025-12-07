@@ -104,7 +104,7 @@ export class People {
 
     if (FIO != undefined) {
       // ToDo: я так понял ввели обозначение full_name для фамилии. Логику работы возможно стоит уточнить с Лизой.
-      currentFilterType = "first_name"; // TODO какой тип фильтра для фио в бд
+      currentFilterType = "full_name"; // TODO какой тип фильтра для фио в бд
       currentFilterString = FIO;
     } else if (email != undefined) {
       currentFilterType = "email";
@@ -141,7 +141,8 @@ export class People {
           Но возможно ошибаюсь. Нужно тестировать.
           Может на итераторе написать?
        }*/
-      for (let i = 0; i < data.length; i++) {
+      const dataLength = Object.keys(data.users).length;
+      for (let i = 0; i < dataLength; i++) {
         const userId = Object.keys(data.users)[i];
         const userData = data.users[userId];
         peoples.push(

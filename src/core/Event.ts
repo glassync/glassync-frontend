@@ -2,36 +2,20 @@ import { RecurrenceInterval } from "./Enum";
 import { Person } from "@/core/Person";
 
 export class Event {
-  private uid: number;
-  private title: string;
-  private description: string;
-  private date: Date;
-  private startTime: string;
-  private endTime: string;
-  private recurrenceInterval: RecurrenceInterval;
-  private recurrenceValue: number;
-  private members: Person[] = []; // Todo учесть, приспособить
+  private uid = 0;
+  private title = "";
+  private description = "";
+  private date: Date = new Date();
+  private startTime = "";
+  private endTime = "";
+  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE;
+  private recurrenceValue = 0;
+  private members: Map<number, boolean> = new Map();
 
   // region Конструкторы
 
-  constructor(
-    uid: number,
-    title: string,
-    description: string,
-    date: Date,
-    startTime: string,
-    endTime: string,
-    recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE,
-    recurrenceValue = 0
-  ) {
-    this.uid = uid;
-    this.title = title;
-    this.description = description;
-    this.date = date;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.recurrenceInterval = recurrenceInterval;
-    this.recurrenceValue = recurrenceValue;
+  constructor() {
+    // if needed
   }
 
   // endregion
@@ -78,7 +62,7 @@ export class Event {
     return [];
   }
 
-  public getMembers(): Person[] {
+  public getMembers(): Map<number, boolean> {
     return this.members || [];
   }
 
@@ -87,7 +71,7 @@ export class Event {
     console.log("Установлены напоминания:", times);
   }
 
-  public setMembers(members: Person[]) {
+  public setMembers(members: Map<number, boolean>) {
     this.members = members;
   }
 

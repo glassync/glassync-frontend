@@ -21,10 +21,11 @@ export enum UserRelationship {
 }
 
 export enum RelationToAuthorizedUser {
-  NO_RELATION = "NO_RELATION",
-  SENT_FRIEND_REQUEST = "SENT_FRIEND_REQUEST",
+  NO_RELATION = "not_friends",
+  SENT_FRIEND_REQUEST = "friend_request_sent",
+  FRIEND_REQUEST_RECEIVED = "friend_request_received",
   PENDING_RESPONSE_TO_REQUEST = "PENDING_RESPONSE_TO_REQUEST",
-  FRIEND = "FRIEND",
+  FRIEND = "friends",
   all = "all",
   userself = "self",
 }

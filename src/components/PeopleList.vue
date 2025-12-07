@@ -18,7 +18,7 @@
       :profile="profile"
     />
     <PersonCard
-      v-for="person in noRelation"
+      v-for="person in noRelations"
       :key="'no-rel-' + person.getUserUID()"
       :person="person"
       :relation="RelationToAuthorizedUser.NO_RELATION"
@@ -54,7 +54,7 @@ const props = defineProps({
   profile: { type: Object as () => Profile, required: true },
   friends: { type: Array as () => Person[], default: () => [] },
   pending: { type: Array as () => Person[], default: () => [] },
-  noRelation: { type: Array as () => Person[], default: () => [] },
+  noRelations: { type: Array as () => Person[], default: () => [] },
   sentRequests: { type: Array as () => Person[], default: () => [] },
   selectable: { type: Array as () => Person[], default: () => [] },
   maxHeight: { type: Number, default: 400 },
@@ -76,7 +76,7 @@ const isEmpty = computed(
   () =>
     props.friends.length === 0 &&
     props.pending.length === 0 &&
-    props.noRelation.length === 0 &&
+    props.noRelations.length === 0 &&
     props.sentRequests.length === 0 &&
     props.selectable.length === 0
 );

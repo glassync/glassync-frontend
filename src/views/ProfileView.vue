@@ -3,7 +3,7 @@
     <div class="profile-header text-center mb-4">
       <div class="avatar-container position-relative d-inline-block mb-3">
         <img
-          :src="profile.getAvatarUrl() || defaultAvatar"
+          :src="defaultAvatar"
           alt="Аватар"
           class="avatar rounded-circle border border-success"
         />
@@ -15,8 +15,8 @@
           ✏️
         </button>
       </div>
-      <h1>{{ profile.getFullName() }}</h1>
-      <p class="username text-muted">@{{ profile.getNickname() }}</p>
+      <h1>{{ user?.getFirstName() }} {{ user?.getLastName() }}</h1>
+      <p class="username text-muted">@{{ user?.getNickname() }}</p>
     </div>
 
     <NotificationPlatformList
@@ -39,11 +39,13 @@
 import type { Profile } from "@/core/Profile";
 import NotificationPlatformList from "@/components/NotificationPlatformList.vue";
 import { defineProps } from "vue";
+import router from "@/router";
 
 const props = defineProps<{
   profile: Profile;
 }>();
 
+const user = props.profile.getAuthorizedUser();
 const defaultAvatar = "/images/default-avatar.png"; // Todo: путь к дефолтному аватару
 
 function changeAvatar() {
@@ -56,9 +58,12 @@ function editProfile() {
   alert("Редактировать профиль");
 }
 
-function logout() {
+//TODO async func
+async function logout() {
   // Todo: Логика выхода из аккаунта
   alert("Выйти из аккаунта");
+  await props.profile.logout();
+  router.push("/authorization");
 }
 </script>
 

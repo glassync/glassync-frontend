@@ -2,14 +2,20 @@ import { Profile } from "./Profile";
 import { Person } from "./Person";
 import { Event } from "./Event";
 
-class Events {
+export class Events {
   private static instance: Events | null = null;
   //private events: EventU[] = [];
-  private profile: Profile;
+  // private profile: Profile;
 
-  // TODO почему профиль?
-  private constructor(profile: Profile) {
-    this.profile = profile;
+  public static getInstance(): Events {
+    if (!Events.instance) {
+      Events.instance = new Events();
+    }
+    return Events.instance;
+  }
+
+  private constructor() {
+    // Инициализация если нужно будет
   }
 
   // public static getInstance(): Events {
