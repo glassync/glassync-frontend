@@ -46,7 +46,7 @@ const props = defineProps<{
 }>();
 
 const user = props.profile.getAuthorizedUser();
-const defaultAvatar = "/images/default-avatar.png"; // Todo: путь к дефолтному аватару
+const defaultAvatar = "/images/ava.jpg";
 
 function changeAvatar() {
   // Todo: Логика изменения аватара
@@ -54,8 +54,7 @@ function changeAvatar() {
 }
 
 function editProfile() {
-  // Todo: Логика редактирования профиля
-  alert("Редактировать профиль");
+  router.push("/edit-profile");
 }
 
 //TODO async func
