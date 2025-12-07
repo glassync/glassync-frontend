@@ -251,7 +251,7 @@ const selectedParticipants = ref<Person[]>([]);
 
 watch(
   () => props.event,
-  (event) => {
+  async (event) => {
     const user = props.profile.getAuthorizedUser();
     if (event) {
       isEditMode.value = true;
@@ -290,7 +290,6 @@ watch(
         RelationToAuthorizedUser.FRIEND
       );
 
-      const user = props.profile.getAuthorizedUser();
       const allFriends = await People.getPeopleByFilter(friendsFilter);
 
       const membersMap = event.getMembers();
