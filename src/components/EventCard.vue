@@ -1,7 +1,7 @@
 <template>
   <div class="card shadow-sm mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">{{ event.getTitle() }}</h5>
+      <h5 class="mb-0">{{ props.event.getTitle() }}</h5>
       <button class="btn btn-link p-0" @click="openDetails">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -22,11 +22,11 @@
     </div>
     <div class="card-body">
       <p class="text-muted">
-        {{ formatDate(event.getDate()) }} • {{ event.getStartTime() }}–{{
-          event.getEndTime()
-        }}
+        {{ formatDate(props.event.getDate()) }} •
+        {{ props.event.getStartTime() }}–
+        {{ props.event.getEndTime() }}
       </p>
-      <p>{{ event.getDescription() }}</p>
+      <p>{{ props.event.getDescription() }}</p>
 
       <div class="dropdown">
         <button
@@ -40,7 +40,7 @@
           class="dropdown-menu overflow-auto"
           style="max-height: 150px; width: 200px"
         >
-          <li v-for="person in event.getMembers()" :key="person.getUserUID()">
+          <li v-for="person in members" :key="person.getUserUID()">
             <span class="dropdown-item d-flex align-items-center">
               <span class="me-2 badge bg-secondary">
                 {{ person.getFirstName().charAt(0).toUpperCase() }}
@@ -57,14 +57,49 @@
 
 <script setup lang="ts">
 import type { Event } from "@/core/Event";
+import type { Person } from "@/core/Person";
+import { ref, watch, defineProps } from "vue";
+
+import { People } from "@/core/People";
 import { useRouter } from "vue-router";
-import { defineProps } from "vue";
 
 const props = defineProps<{
   event: Event;
 }>();
 
 const router = useRouter();
+
+// Массив участников (Person[])
+const members = ref<Person[]>([]);
+
+// Функция, чтобы получить всех участников по UID из event.getMembers()
+async function loadMembers() {
+  members.value = [];
+  const membersMap = props.event.getMembers();
+  const loadedPersons: Person[] = [];
+
+  for (const [uid, included] of membersMap.entries()) {
+    if (included) {
+      const person = await People.getPersonByUID(uid);
+      if (person) loadedPersons.push(person);
+    }
+  }
+
+  members.value = loadedPersons;
+}
+
+// Загружаем участников при изменении события
+watch(
+  () => props.event,
+  () => {
+    if (props.event) {
+      loadMembers();
+    } else {
+      members.value = [];
+    }
+  },
+  { immediate: true }
+);
 
 function openDetails() {
   router.push({
