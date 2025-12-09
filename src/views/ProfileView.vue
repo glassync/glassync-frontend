@@ -19,7 +19,14 @@
       <p class="username text-muted">@{{ user?.getNickname() }}</p>
     </div>
 
-    <div class="mb-4 py-4 platforms-centered">
+    <div class="mb-4 pt-4 pb-2 platforms-centered">
+      <TelegramLoginWidget
+        bot-username="user?.getFirstName()"
+        url-callback="https://telegram.org/js/telegram-widget.js?22"
+      />
+    </div>
+
+    <div class="mb-4 pb-4 platforms-centered">
       <NotificationPlatformList
         :platforms="profile.getNotificationPlatforms()"
       />
@@ -41,6 +48,7 @@ import type { Profile } from "@/core/Profile";
 import NotificationPlatformList from "@/components/NotificationPlatformList.vue";
 import { defineProps } from "vue";
 import router from "@/router";
+import TelegramLoginWidget from "@/components/TelegramAuthWidget.vue";
 
 const props = defineProps<{
   profile: Profile;
