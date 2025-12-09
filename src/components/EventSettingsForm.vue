@@ -19,7 +19,6 @@
             v-model="form.name"
             :class="{ 'is-invalid': validationErrors.name }"
             placeholder="Введите название"
-            :disabled="!canEditAll"
             required
           />
           <div v-if="validationErrors.name" class="invalid-feedback">
@@ -31,7 +30,6 @@
           <textarea
             class="form-control mb-3"
             v-model="form.description"
-            :disabled="!canEditAll"
             rows="3"
             placeholder="Введите описание"
           ></textarea>
@@ -47,7 +45,6 @@
                 class="form-control mb-3"
                 v-model="form.date"
                 :class="{ 'is-invalid': validationErrors.date }"
-                :disabled="!canEditAll"
                 required
               />
               <div v-if="validationErrors.date" class="invalid-feedback">
@@ -59,7 +56,6 @@
                 type="time"
                 class="form-control mb-3"
                 v-model="form.startTime"
-                :disabled="!canEditAll"
               />
 
               <small class="text-secondary">Время конца</small>
@@ -67,7 +63,6 @@
                 type="time"
                 class="form-control mb-3"
                 v-model="form.endTime"
-                :disabled="!canEditAll"
               />
             </div>
 
@@ -81,7 +76,6 @@
                   class="form-check-input"
                   id="repeatCheckbox"
                   v-model="form.repeat"
-                  :disabled="!canEditAll"
                 />
                 <label class="form-check-label" for="repeatCheckbox"
                   >Повторять</label
@@ -95,16 +89,11 @@
                   class="form-control mb-3"
                   v-model.number="form.repeatInterval"
                   min="1"
-                  :disabled="!canEditAll"
                   placeholder="Введите число"
                 />
 
                 <small class="text-secondary">Мера времени</small>
-                <select
-                  class="form-select"
-                  v-model="form.repeatIntervalType"
-                  :disabled="!canEditAll"
-                >
+                <select class="form-select" v-model="form.repeatIntervalType">
                   <option
                     v-for="(label, key) in intervalLabels"
                     :key="key"
