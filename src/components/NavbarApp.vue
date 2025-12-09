@@ -4,8 +4,8 @@
       <router-link to="/" class="navbar-brand">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
+          width="24"
+          height="24"
           fill="currentColor"
           class="bi bi-calendar-check"
           viewBox="0 0 16 16"
@@ -17,14 +17,16 @@
             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
           />
         </svg>
-        <span>Glassync</span>
+        <span class="fs-2">Glassync</span>
       </router-link>
     </div>
 
     <div class="navbar-menu" v-if="isAuthorized">
-      <router-link to="/" class="navbar-item">Главная</router-link>
-      <router-link to="/glassies" class="navbar-item">Занятость</router-link>
-      <router-link to="/friends" class="navbar-item">Друзья</router-link>
+      <router-link to="/" class="navbar-item fs-5">Главная</router-link>
+      <router-link to="/glassies" class="navbar-item fs-5"
+        >Занятость</router-link
+      >
+      <router-link to="/friends" class="navbar-item fs-5">Друзья</router-link>
     </div>
 
     <div class="navbar-menu" v-else></div>
@@ -39,8 +41,8 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="24"
+              height="24"
               fill="currentColor"
               class="bi bi-bell"
               viewBox="0 0 16 16"
@@ -50,17 +52,13 @@
               />
             </svg>
           </button>
-
-          <!--          <div v-if="showNotifications" class="notifications-dropdown">-->
-          <!--            <NotificationsList :profile="profile" />-->
-          <!--          </div>-->
         </div>
 
         <router-link to="/account" class="navbar-icon-btn" title="Аккаунт">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="24"
+            height="24"
             fill="currentColor"
             class="bi bi-person-circle"
             viewBox="0 0 16 16"
@@ -121,7 +119,6 @@
 
 <script setup lang="ts">
 import { ref, computed, defineProps } from "vue";
-// import NotificationsList from "./components/NotificationsList.vue";
 
 interface Profile {
   getAuthorizedUser(): any | null;
@@ -144,7 +141,7 @@ function toggleNotifications() {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #fff;
+  background-color: #f8f9fa;
   box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
 }
 
@@ -160,12 +157,6 @@ function toggleNotifications() {
   font-weight: bold;
   font-size: 1.2rem;
   color: #333;
-}
-
-.navbar-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
 }
 
 .navbar-menu {
@@ -220,13 +211,6 @@ function toggleNotifications() {
 .navbar-icon-btn:hover {
   background-color: #f0f0f0;
   transform: translateY(-2px);
-}
-
-.nav-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  transition: transform 0.3s;
 }
 
 .navbar-icon-btn:hover .nav-icon {
