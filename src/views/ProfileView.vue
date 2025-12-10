@@ -20,8 +20,9 @@
     </div>
 
     <div class="mb-4 pt-4 pb-2 platforms-centered">
+      <!-- TODO вставить корректный тег бота-->
       <TelegramLoginWidget
-        bot-username="user?.getFirstName()"
+        bot-username="glassync_bot"
         url-callback="https://telegram.org/js/telegram-widget.js?22"
       />
     </div>
