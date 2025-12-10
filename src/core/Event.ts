@@ -224,6 +224,22 @@ export class Event {
     return eventsArray;
   }
 
+  public async sendEventInvite(): void {
+    const response = await fetch(`api/event/action/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event_id: this.getUID(),
+        action: "invite",
+        extra_data: {
+          user_id: this.getCreatorID(),
+        },
+      }),
+    });
+  }
+
   public static async getEventsByIDs(eventIDs: number): Promise<Event> {
     const response = await fetch(`api/event/get/`, {
       method: "POST",
