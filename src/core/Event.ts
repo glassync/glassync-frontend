@@ -224,7 +224,7 @@ export class Event {
     return eventsArray;
   }
 
-  public async sendEventInvite(): void {
+  public async sendEventInvite(): Promise<void> {
     const response = await fetch(`api/event/action/`, {
       method: "POST",
       headers: {

@@ -51,7 +51,6 @@ export default defineComponent({
     async function handleTelegramAuth() {
       const user = arguments[0];
       console.log("Telegram user data:", user);
-      debugger;
       const success = await sendUserData(user);
       if (success) {
         alert(`Привет, ${user.first_name}! Вы успешно вошли через Telegram.`);
@@ -63,7 +62,6 @@ export default defineComponent({
      * @param user
      */
     async function sendUserData(user) {
-      debugger;
       const response = await fetch(props.urlCallback, {
         method: "POST",
         headers: {
