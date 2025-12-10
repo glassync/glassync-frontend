@@ -256,6 +256,7 @@ function createUpdatedUser(field: keyof typeof form): Person {
 function updateFirstName() {
   const user = createUpdatedUser("firstName");
   const success = props.profile.updateProfile(user);
+  props.profile.getAuthorizedUser()?.setFirstName(user.getFirstName());
   handleResult("firstName", success, "Имя успешно обновлено!");
   if (success) {
     syncFormWithProfile();
@@ -265,6 +266,7 @@ function updateFirstName() {
 function updateLastName() {
   const user = createUpdatedUser("lastName");
   const success = props.profile.updateProfile(user);
+  props.profile.getAuthorizedUser()?.setLastName(user.getLastName());
   handleResult("lastName", success, "Фамилия успешно обновлена!");
   if (success) {
     syncFormWithProfile();
@@ -274,6 +276,7 @@ function updateLastName() {
 function updateNickname() {
   const user = createUpdatedUser("nickname");
   const success = props.profile.updateProfile(user);
+  props.profile.getAuthorizedUser()?.setNickname(user.getNickname());
   handleResult("nickname", success, "Никнейм успешно обновлён!");
   if (success) {
     syncFormWithProfile();
@@ -283,6 +286,7 @@ function updateNickname() {
 function updateEmail() {
   const user = createUpdatedUser("email");
   const success = props.profile.updateProfile(user);
+  props.profile.getAuthorizedUser()?.setEmail(user.getEmail());
   handleResult("email", success, "Почта успешно обновлена!");
   if (success) {
     syncFormWithProfile();
@@ -304,6 +308,7 @@ function changePassword() {
 // Обновить поля формы из текущих данных профиля
 function syncFormWithProfile() {
   const user = props.profile.getAuthorizedUser();
+  console.log("editUser", user);
   if (user) {
     form.firstName = user.getFirstName();
     form.lastName = user.getLastName();
