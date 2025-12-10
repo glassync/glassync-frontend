@@ -156,7 +156,7 @@ function formatDateInput(date: Date): string {
 }
 
 // Обработчик применения ручного диапазона по кнопке
-function applyManualDateRange() {
+async function applyManualDateRange() {
   const start = new Date(manualStartDate.value);
   const end = new Date(manualEndDate.value);
 
@@ -165,8 +165,9 @@ function applyManualDateRange() {
     searchEndDate.value = end;
     const userID = user.value?.getUserUID();
 
-    if (userID !== undefined) Event.getEvents(userID, start, end);
-    else console.error("User ID is undefined");
+    if (userID !== undefined) {
+      events.value = await Event.getEvents(userID, start, end);
+    } else console.error("User ID is undefined");
   } else {
     alert("Дата начала не может быть позже даты окончания");
   }

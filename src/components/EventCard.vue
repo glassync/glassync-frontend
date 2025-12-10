@@ -102,9 +102,12 @@ watch(
 );
 
 function openDetails() {
+  console.log(props.event);
+  const eventID = props.event.getUID();
+  console.log(eventID);
   router.push({
     path: "/event",
-    query: { eventUID: props.event.getUID().toString() },
+    query: { eventUID: eventID },
   });
 }
 
