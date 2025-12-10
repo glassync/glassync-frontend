@@ -8,6 +8,7 @@ import RegistrationView from "../views/RegistrationView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import EventView from "../views/EventView.vue";
 import GlassiesView from "../views/GlassiesView.vue";
+import TestCalendar from "@/components/TestCalendar.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -59,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Glassies",
     component: GlassiesView,
     props: true,
+  },
+  {
+    path: "/calendar",
+    name: "Calendar",
+    component: TestCalendar,
   },
 ];
 

@@ -34,19 +34,12 @@
         </div>
 
         <div class="flex-grow-1 overflow-auto">
-          <EventList :title="'События'" :events="events" />
+          <EventList :title="'События'" :events="userEvents" />
         </div>
       </div>
 
       <div class="col-9" style="overflow: auto">
-        <vue-cal
-          style="height: 100%"
-          default-view="week"
-          :events="vueCalEvents"
-          locale="ru"
-          @view-change="onViewChange"
-          @cell-click="onCellClick"
-        />
+        <TestCalendar :events="calendarEvents" />
       </div>
     </div>
   </div>
@@ -57,6 +50,7 @@ import { ref, computed, watch, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import EventList from "@/components/EventList.vue";
 import { Events } from "@/core/Events";
+import TestCalendar from "@/components/TestCalendar.vue";
 import type { Profile } from "@/core/Profile";
 import { Event } from "@/core/Event";
 
@@ -77,37 +71,103 @@ const manualStartDate = ref(formatDateInput(searchStartDate.value));
 const manualEndDate = ref(formatDateInput(searchEndDate.value));
 
 const eventsInstance = Events.getInstance();
-const events = ref<Event[]>([]);
+const userEvents = ref<Event[]>([]);
 
-// Маппинг событий в формат vue-cal
-const vueCalEvents = computed(() => {
-  return events.value.map((ev) => ({
-    start: formatDateTime(ev.getDate(), ev.getStartTime()),
-    end: formatDateTime(ev.getDate(), ev.getEndTime()),
-    title: ev.getTitle(),
-    eventObj: ev,
-  }));
-});
+// const vueCalEvents = computed(() => {
+//   if (!events.value || events.value.length === 0) return [];
+//
+//   return events.value.map((ev) => ({
+//     start: formatDateTime(ev.getDate(), ev.getStartTime()),
+//     end: formatDateTime(ev.getDate(), ev.getEndTime()),
+//     title: ev.getTitle(),
+//     eventObj: ev,
+//   }));
+// });
+
+interface CalendarEvent {
+  start: string;
+  end: string;
+  title: string;
+  description: string;
+}
+
+const calendarEvents = ref<CalendarEvent[]>([]);
+
+function formatDateToYMD(dateInput: Date | string): string {
+  // Если передана строка, преобразуем в Date
+  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date");
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+watch(
+  () => [user.value],
+  async () => {
+    const userID = user.value?.getUserUID();
+    if (userID) {
+      try {
+        userEvents.value = await Event.getEvents(
+          userID,
+          searchStartDate.value,
+          searchEndDate.value
+        );
+        console.log(userEvents.value);
+        for (const event of userEvents.value) {
+          calendarEvents.value.push({
+            start:
+              formatDateToYMD(event.getDate()) +
+              " " +
+              event.getStartTime().slice(0, -3), // или event.start, зависит от структуры userEvents
+            end:
+              formatDateToYMD(event.getDate()) +
+              " " +
+              event.getEndTime().slice(0, -3), // или event.end
+            description: event.getDescription(),
+            class: "event-normal",
+            title: event.getTitle || "Без имени", // с обработкой отсутствия title
+            ...event, // сохраняем все остальные свойства события
+          });
+        }
+      } catch (error) {
+        console.error("Error loading events:", error);
+        userEvents.value = [];
+      }
+    } else {
+      userEvents.value = [];
+    }
+  },
+  { immediate: true }
+);
 
 watch(
   () => [user.value, searchStartDate.value, searchEndDate.value],
-  () => {
-    if (user.value && searchStartDate.value && searchEndDate.value) {
-      events.value = eventsInstance.getEvents(
-        searchStartDate.value,
-        searchEndDate.value
-      );
-      // Но по идее можно и так:
-      // events.value = eventsInstance.getUserEvents(
-      //   user.value,
-      //   searchStartDate.value,
-      //   searchEndDate.value
-      // );
-      // Обновляем ручные поля под новые даты (если меняется диапазон не вручную)
-      manualStartDate.value = formatDateInput(searchStartDate.value);
-      manualEndDate.value = formatDateInput(searchEndDate.value);
+  async () => {
+    const userID = user.value?.getUserUID();
+    if (userID && searchStartDate.value && searchEndDate.value) {
+      try {
+        userEvents.value = await Event.getEvents(
+          userID,
+          searchStartDate.value,
+          searchEndDate.value
+        );
+        console.log(userEvents.value);
+        // Обновляем ручные поля
+        manualStartDate.value = formatDateInput(searchStartDate.value);
+        manualEndDate.value = formatDateInput(searchEndDate.value);
+      } catch (error) {
+        console.error("Error loading events:", error);
+        userEvents.value = [];
+      }
     } else {
-      events.value = [];
+      userEvents.value = [];
     }
   },
   { immediate: true }
@@ -166,7 +226,8 @@ async function applyManualDateRange() {
     const userID = user.value?.getUserUID();
 
     if (userID !== undefined) {
-      events.value = await Event.getEvents(userID, start, end);
+      userEvents.value = await Event.getEvents(userID, start, end);
+      console.log(userEvents.value);
     } else console.error("User ID is undefined");
   } else {
     alert("Дата начала не может быть позже даты окончания");
@@ -178,6 +239,39 @@ function onCellClick(event: any) {
     console.log("Клик по событию:", event.eventObj);
   }
 }
+
+// eslint-disable-next-line vue/no-export-in-script-setup
+// export default {
+//   name: "MainView",
+//   components: { VueCal },
+//   data() {
+//     return {
+//       events: [
+//         {
+//           start: "2025-05-28 10:00",
+//           end: "2025-05-28 11:00",
+//           title: "Командное совещание",
+//         },
+//         {
+//           start: "2025-04-02 13:00",
+//           end: "2025-04-02 14:30",
+//           title: "Разработка задач",
+//         },
+//       ],
+//       tasks: ["Задача 1", "Задача 2", "Задача 3"],
+//       showEventModal: false,
+//       showTaskModal: false,
+//       newEvent: {
+//         title: "",
+//         startDate: "",
+//         startTime: "",
+//         endDate: "",
+//         endTime: "",
+//       },
+//       newTask: "",
+//     };
+//   },
+// };
 </script>
 
 <style scoped>
