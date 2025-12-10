@@ -222,11 +222,12 @@ const form = reactive({
   startTime: "",
   endTime: "",
   repeat: false,
-  repeatInterval: 1,
-  repeatIntervalType: RecurrenceInterval.DAILY,
+  repeatInterval: 0,
+  repeatIntervalType: RecurrenceInterval.NONE,
   remind: false,
   remindMinutes: 1,
   invited: {} as Record<number, boolean>, // uid -> boolean
+  shoudAllowRepeat: false,
 });
 
 const validationErrors = reactive({
@@ -253,14 +254,15 @@ watch(
       form.startTime = event.getStartTime();
       form.endTime = event.getEndTime();
 
-      form.repeat = event.getRecurrenceValue() !== null;
-      if (form.repeat) {
-        form.repeatInterval = event.getRecurrenceValue() ?? 1;
+      form.repeat = event.getRecurrenceValue();
+      console.log("form.repeat " + form.repeat);
+      if (form.repeat != 0) {
+        form.repeatInterval = event.getRecurrenceValue() ?? 0;
         form.repeatIntervalType =
-          event.getRecurrenceInterval() ?? RecurrenceInterval.DAILY;
+          event.getRecurrenceInterval() ?? RecurrenceInterval.NONE;
       } else {
-        form.repeatInterval = 1;
-        form.repeatIntervalType = RecurrenceInterval.DAILY;
+        form.repeatInterval = 0;
+        form.repeatIntervalType = RecurrenceInterval.NONE;
       }
 
       const remindTimes = event.getNotifications();
@@ -323,8 +325,8 @@ watch(
       form.endTime = "";
 
       form.repeat = false;
-      form.repeatInterval = 1;
-      form.repeatIntervalType = RecurrenceInterval.DAILY;
+      form.repeatInterval = 0;
+      form.repeatIntervalType = RecurrenceInterval.NONE;
 
       form.remind = false;
       form.remindMinutes = 1;

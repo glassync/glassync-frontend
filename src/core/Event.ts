@@ -8,8 +8,8 @@ export class Event {
   private startTime = "";
   private endTime = "";
   private creatorID = 0;
-  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.DAILY;
-  private recurrenceValue = 1;
+  private recurrenceInterval: RecurrenceInterval = RecurrenceInterval.NONE;
+  private recurrenceValue = 0;
   private members: Map<number, boolean> = new Map();
   private notifications: number[] = [];
 
@@ -205,7 +205,7 @@ export class Event {
           : RecurrenceInterval.NONE
       );
 
-      event.setRecurrenceValue(eventData.recurrence_rule_interval || 1);
+      event.setRecurrenceValue(eventData.recurrence_rule_interval || 0);
 
       const eventMembers: Map<number, boolean> = new Map();
       if (Array.isArray(eventData.notifications)) {
@@ -285,7 +285,7 @@ export class Event {
         : RecurrenceInterval.NONE
     );
 
-    event.setRecurrenceValue(eventData.recurrence_rule_interval || 1);
+    event.setRecurrenceValue(eventData.recurrence_rule_interval || 0);
 
     const eventMembers: Map<number, boolean> = new Map();
     if (Array.isArray(eventData.notifications)) {
