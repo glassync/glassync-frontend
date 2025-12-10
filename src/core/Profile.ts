@@ -53,7 +53,7 @@ export class Profile {
   public async loadNotificationPlatforms(): Promise<void> {
     try {
       const response = await fetch("api/notification/platform/get/", {
-        method: "GET", // или "POST", если API требует
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,7 +72,7 @@ export class Profile {
       for (const item of data.notification_settings) {
         const platform = new NotificationPlatform(
           item.id,
-          "Телеграм",
+          item.id_notification_platform === 1 ? "Телеграм" : "Вк",
           item.active,
           item.id_notification_platform,
           this

@@ -19,7 +19,7 @@
       <p class="username text-muted">@{{ user?.getNickname() }}</p>
     </div>
 
-    <div class="mb-4 pt-4 pb-2 platforms-centered">
+    <div class="mb-4 pt-4 platforms-centered">
       <!-- TODO вставить корректный тег бота-->
       <TelegramLoginWidget
         bot-username="glassync_bot"
