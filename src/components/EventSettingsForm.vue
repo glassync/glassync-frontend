@@ -393,7 +393,8 @@ function buildEvent(): Event {
   }
 
   const membersMap = new Map<number, boolean>();
-
+  console.log("creator " + isCreator.value);
+  console.log("selectedParticipants " + selectedParticipants.value);
   if (isCreator.value) {
     for (const person of selectedParticipants.value) {
       membersMap.set(person.getUserUID(), true);
@@ -405,6 +406,7 @@ function buildEvent(): Event {
     }
   }
   eventObj.setMembers(membersMap);
+  console.log(membersMap);
 
   return eventObj;
 }

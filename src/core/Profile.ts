@@ -244,6 +244,8 @@ export class Profile {
     const day = String(d.getDate()).padStart(2, "0");
 
     const formatted = `${year}-${month}-${day}`;
+    const eventMembers = event.getMembers();
+    const memberIds = Array.from(eventMembers.keys());
 
     try {
       const response = await fetch(`api/event/create/`, {
@@ -255,11 +257,11 @@ export class Profile {
           name: event.getTitle(),
           description: event.getDescription(),
           date: formatted,
-          time_start: event.getStartTime(),
-          time_end: event.getEndTime(),
+          time_start: event.getStartTime() + ":00",
+          time_end: event.getEndTime() + ":00",
           recurrence_rule_type: event.getRecurrenceInterval(),
           recurrence_rule_interval: event.getRecurrenceValue(),
-          notifications: [],
+          notifications: memberIds,
         }),
       });
       return true;
