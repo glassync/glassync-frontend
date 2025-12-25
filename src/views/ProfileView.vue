@@ -23,7 +23,7 @@
       <!-- TODO вставить корректный тег бота-->
       <TelegramLoginWidget
         bot-username="glassync_bot"
-        url-callback="https://telegram.org/js/telegram-widget.js?22"
+        url-callback="/api/auth/platform/init/"
       />
     </div>
 
