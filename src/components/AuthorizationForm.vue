@@ -69,13 +69,21 @@ async function handleLogin() {
   loading.value = true;
   error.value = false;
 
-  const success = await props.profile.login(form.email, form.password);
-  if (success) {
-    router.push("/");
-  } else {
+  try {
+    const success = await props.profile.login(form.email, form.password);
+    if (success) {
+      router.push("/");
+    } else {
+      error.value = true;
+    }
+  } catch (error) {
     error.value = true;
+    console.error("Ошибка входа:", error);
+  } finally {
+    loading.value = false;
   }
 }
+
 </script>
 
 <style scoped>

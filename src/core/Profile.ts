@@ -141,6 +141,12 @@ export class Profile {
         }),
       });
 
+      if (!response.ok) {
+        console.error("Ошибка авторизации:", response.status, response.statusText);
+        this.isAuthorized = false;
+        return false;
+      }
+
       const currentUserFilter = new PersonFilter(
         undefined,
         undefined,
@@ -149,10 +155,12 @@ export class Profile {
       );
       const currentPerson = await People.getPeopleByFilter(currentUserFilter);
       return await this.handleAuthResponse(response, currentPerson[0]);
+
     } catch (error) {
       this.isAuthorized = false;
       console.error("Ошибка сети:", error);
       return false;
+    } finally {
     }
   }
 
