@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar-left">
-      <router-link to="/" class="navbar-brand">
+      <router-link v-if="isAuthorized" to="/" class="navbar-brand">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -19,12 +19,31 @@
         </svg>
         <span class="fs-2">Glassync</span>
       </router-link>
+
+      <div v-else class="navbar-brand navbar-brand--disabled">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          class="bi bi-calendar-check"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"
+          />
+          <path
+            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+          />
+        </svg>
+        <span class="fs-2">Glassync</span>
+      </div>
     </div>
 
     <div class="navbar-menu" v-if="isAuthorized">
       <router-link to="/" class="navbar-item fs-5">Главная</router-link>
       <router-link to="/glassies" class="navbar-item fs-5"
-        >Занятость</router-link
+      >Занятость</router-link
       >
       <router-link to="/friends" class="navbar-item fs-5">Друзья</router-link>
     </div>
@@ -33,26 +52,26 @@
 
     <div class="navbar-right">
       <template v-if="isAuthorized">
-        <div class="notification-wrapper" ref="notificationWrapper">
-          <button
-            class="navbar-icon-btn"
-            title="Уведомления"
-            @click="toggleNotifications"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              class="bi bi-bell"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"
-              />
-            </svg>
-          </button>
-        </div>
+<!--        <div class="notification-wrapper" ref="notificationWrapper">-->
+<!--          <button-->
+<!--            class="navbar-icon-btn"-->
+<!--            title="Уведомления"-->
+<!--            @click="toggleNotifications"-->
+<!--          >-->
+<!--            <svg-->
+<!--              xmlns="http://www.w3.org/2000/svg"-->
+<!--              width="24"-->
+<!--              height="24"-->
+<!--              fill="currentColor"-->
+<!--              class="bi bi-bell"-->
+<!--              viewBox="0 0 16 16"-->
+<!--            >-->
+<!--              <path-->
+<!--                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"-->
+<!--              />-->
+<!--            </svg>-->
+<!--          </button>-->
+<!--        </div>-->
 
         <router-link to="/account" class="navbar-icon-btn" title="Аккаунт">
           <svg
@@ -157,6 +176,25 @@ function toggleNotifications() {
   font-weight: bold;
   font-size: 1.2rem;
   color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.navbar-brand:hover {
+  color: #42b983;
+  transform: translateY(-2px);
+}
+
+.navbar-brand--disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.navbar-brand--disabled:hover {
+  color: #333;
+  transform: none;
 }
 
 .navbar-menu {
@@ -206,6 +244,8 @@ function toggleNotifications() {
   transition: all 0.3s;
   border: none;
   background: none;
+  color: #333;
+  text-decoration: none;
 }
 
 .navbar-icon-btn:hover {

@@ -25,7 +25,6 @@
             {{ validationErrors.name }}
           </div>
 
-          <!-- Описание -->
           <small class="text-secondary">Описание</small>
           <textarea
             class="form-control mb-3"
@@ -35,7 +34,6 @@
           ></textarea>
 
           <div class="row">
-            <!-- Когда состоится -->
             <div class="col-6">
               <h5>Когда состоится?</h5>
 
@@ -56,17 +54,24 @@
                 type="time"
                 class="form-control mb-3"
                 v-model="form.startTime"
+                :class="{ 'is-invalid': validationErrors.startTime }"
               />
+              <div v-if="validationErrors.startTime" class="invalid-feedback">
+                {{ validationErrors.startTime }}
+              </div>
 
               <small class="text-secondary">Время конца</small>
               <input
                 type="time"
                 class="form-control mb-3"
                 v-model="form.endTime"
+                :class="{ 'is-invalid': validationErrors.endTime }"
               />
+              <div v-if="validationErrors.endTime" class="invalid-feedback">
+                {{ validationErrors.endTime }}
+              </div>
             </div>
 
-            <!-- Будет повторяться -->
             <div class="col-6">
               <h5>Будет повторяться?</h5>
 
@@ -78,7 +83,7 @@
                   v-model="form.repeat"
                 />
                 <label class="form-check-label" for="repeatCheckbox"
-                  >Повторять</label
+                >Повторять</label
                 >
               </div>
 
@@ -107,7 +112,6 @@
           </div>
         </div>
 
-        <!-- Правая колонка -->
         <div class="col-4 border-start ps-3">
           <h5>Напоминать?</h5>
 
@@ -119,7 +123,7 @@
               v-model="form.remind"
             />
             <label class="form-check-label" for="remindCheckbox"
-              >Включить напоминание</label
+            >Включить напоминание</label
             >
           </div>
 
@@ -136,7 +140,6 @@
 
           <h5 class="mt-4">Пригласить участников</h5>
 
-          <!-- Для создателя: список selectable друзей (с чекбоксами, активными) -->
           <PeopleList
             v-if="isCreator"
             :profile="props.profile"
@@ -144,7 +147,6 @@
             v-model:selectedPeople="selectedParticipants"
           />
 
-          <!-- Для не создателя: список участников без чекбоксов -->
           <PeopleList
             v-else
             :profile="props.profile"
@@ -233,6 +235,8 @@ const form = reactive({
 const validationErrors = reactive({
   name: "",
   date: "",
+  startTime: "",
+  endTime: "",
 });
 
 const selectableFriends = ref<Person[]>([]);
@@ -361,6 +365,8 @@ function validate(): boolean {
   let valid = true;
   validationErrors.name = "";
   validationErrors.date = "";
+  validationErrors.startTime = "";
+  validationErrors.endTime = "";
 
   if (!form.name.trim()) {
     validationErrors.name = "Название обязательно";
@@ -370,6 +376,15 @@ function validate(): boolean {
     validationErrors.date = "Дата обязательна";
     valid = false;
   }
+
+  if (form.startTime && form.endTime) {
+    if (form.startTime >= form.endTime) {
+      validationErrors.startTime = "Время начала должно быть раньше времени конца";
+      validationErrors.endTime = "Время конца должно быть позже времени начала";
+      valid = false;
+    }
+  }
+
   return valid;
 }
 
@@ -478,19 +493,33 @@ function goBack() {
 .card {
   max-width: 900px;
   margin: 1rem auto;
+}
+
+.card-header {
   padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .card-body {
   max-height: 650px;
   overflow-y: auto;
+  padding: 1.5rem;
 }
 
 .card-footer {
-  border-top: none;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
 }
 
 .border-start {
   border-left: 1px solid #ddd;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
 }
 </style>

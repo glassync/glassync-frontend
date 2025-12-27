@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <div class="calendar-wrapper">
     <vue-cal
       class="calendar-inner"
       :events="events"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watch, onMounted } from "vue";
+import { defineProps, ref, watch } from "vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 
@@ -34,20 +34,10 @@ interface CalendarEvent {
   end: string;
   title: string;
   description: string;
-  [key: string]: any; // для дополнительных свойств
+  [key: string]: any;
 }
-const events = ref([
-  {
-    start: "2025-05-28 10:00",
-    end: "2025-05-28 11:00",
-    title: "Тестовое событие 1",
-  },
-  {
-    start: "2025-05-29 14:00",
-    end: "2025-05-29 15:30",
-    title: "Тестовое событие 2",
-  },
-]);
+
+const events = ref<CalendarEvent[]>([]);
 
 const props = defineProps<{
   events: CalendarEvent[];
@@ -61,91 +51,86 @@ watch(
   { deep: true, immediate: true }
 );
 
-console.log("Initial events:", props.events);
-
 const onEventClick = (event: CalendarEvent) => {
   console.log("Событие кликнуто:", event);
 };
 </script>
 
-<style>
-.vuecal__title-bar button {
-  font-weight: 700; /* Жирный шрифт */
-  font-size: 1.4em; /* Размер как у заголовка */
-  color: white; /* Белый текст */
-  background: transparent; /* Прозрачный фон */
-  border: none; /* Убираем границу */
-  cursor: pointer; /* Курсор-указатель */
-  padding: 0 10px; /* Отступы */
-  border-radius: 4px; /* Скругленные углы */
-  transition: all 0.2s; /* Плавные переходы */
-}
-
-.vuecal__title-bar button:hover {
-  transform: scale(1.05); /* Небольшое увеличение */
-}
-
-.vuecal__title-bar button:focus {
-  outline: none; /* Убираем стандартный outline */
-}
-
-.layout {
+<style scoped>
+.calendar-wrapper {
+  width: 100%;
   height: 100%;
-  padding: 20px;
-  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
 }
 
 .calendar-inner {
-  height: 800px;
+  width: 100%;
+  height: 100%;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
+</style>
 
-/* Общие стили календаря */
+<style>
+.vuecal__title-bar button {
+  font-weight: 700;
+  font-size: 1.4em;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.vuecal__title-bar button:hover {
+  transform: scale(1.05);
+}
+
+.vuecal__title-bar button:focus {
+  outline: none;
+}
+
 .vuecal {
   border: none;
   color: #333;
+  height: 100%;
 }
 
 .vuecal__header {
   background: linear-gradient(135deg, #4caf50, #8bc34a);
   color: white;
   padding: 20px 0;
-  border-radius: 12px 12px 0 0;
 }
 
 .vuecal__title {
   font-size: 1.4em;
-  font-weight: 700; /* Жирный шрифт */
+  font-weight: 700;
 }
 
 .vuecal__arrow {
   color: white;
   transition: all 0.2s;
-  font-weight: 700; /* Жирный шрифт */
+  font-weight: 700;
 }
 
 .vuecal__arrow:hover {
   transform: scale(1.2);
 }
 
-/* Дни недели */
 .vuecal__weekdays-headings {
-  background-color: #f8f9fa;
   padding: 10px 0;
   border-bottom: 1px solid #e9ecef;
 }
 
 .vuecal__weekday-header {
-  font-weight: 700; /* Жирный шрифт */
+  font-weight: 700;
   color: #495057;
 }
 
-/* Ячейки дней */
 .vuecal__cell {
-  height: 100px;
   border-right: 1px solid #e9ecef;
   border-bottom: 1px solid #e9ecef;
   transition: background 0.2s;
@@ -157,7 +142,7 @@ const onEventClick = (event: CalendarEvent) => {
 
 .vuecal__cell-date {
   padding: 5px;
-  font-weight: 700; /* Жирный шрифт */
+  font-weight: 700;
 }
 
 .vuecal__cell--today {
@@ -172,7 +157,6 @@ const onEventClick = (event: CalendarEvent) => {
   background-color: rgba(76, 175, 80, 0.2);
 }
 
-/* События */
 .vuecal__event {
   background: linear-gradient(135deg, #4caf50, #8bc34a);
   color: white;
@@ -193,19 +177,5 @@ const onEventClick = (event: CalendarEvent) => {
   font-size: 0.85em;
   opacity: 0.9;
   margin-bottom: 2px;
-}
-
-.vuecal__event-title {
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .calendar-inner {
-    height: 600px;
-  }
-
-  .vuecal__cell {
-    height: 70px;
-  }
 }
 </style>

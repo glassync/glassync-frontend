@@ -1,14 +1,12 @@
 <template>
-  <div
-    class="overflow-auto border rounded p-2"
-    :style="{ maxHeight: maxHeight + 'px' }"
-  >
+  <div class="people-list" :style="{ height: maxHeight + 'px' }">
     <PersonCard
       v-for="person in friends"
       :key="'friend-' + person.getUserUID()"
       :person="person"
       :relation="RelationToAuthorizedUser.FRIEND"
       :profile="profile"
+      @relationChanged="$emit('relationChanged')"
     />
     <PersonCard
       v-for="person in pending"
@@ -16,6 +14,7 @@
       :person="person"
       :relation="RelationToAuthorizedUser.PENDING_RESPONSE_TO_REQUEST"
       :profile="profile"
+      @relationChanged="$emit('relationChanged')"
     />
     <PersonCard
       v-for="person in noRelations"
@@ -23,6 +22,7 @@
       :person="person"
       :relation="RelationToAuthorizedUser.NO_RELATION"
       :profile="profile"
+      @relationChanged="$emit('relationChanged')"
     />
     <PersonCard
       v-for="person in sentRequests"
@@ -30,6 +30,7 @@
       :person="person"
       :relation="RelationToAuthorizedUser.SENT_FRIEND_REQUEST"
       :profile="profile"
+      @relationChanged="$emit('relationChanged')"
     />
     <PersonCard
       v-for="person in selectable"
@@ -38,13 +39,16 @@
       :profile="profile"
       :defaultChecked="selectedPeopleMap.get(person.getUserUID()) ?? false"
       @check="onCheck"
+      @relationChanged="$emit('relationChanged')"
     />
-    <p v-if="isEmpty" class="text-muted">Нет пользователей</p>
+    <div v-if="isEmpty" class="empty-state">
+      Нет пользователей
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineExpose } from "vue";
+import { ref, computed, defineProps, defineExpose, defineEmits } from "vue";
 import PersonCard from "./PersonCard.vue";
 import type { Person } from "@/core/Person";
 import type { Profile } from "@/core/Profile";
@@ -57,8 +61,12 @@ const props = defineProps({
   noRelations: { type: Array as () => Person[], default: () => [] },
   sentRequests: { type: Array as () => Person[], default: () => [] },
   selectable: { type: Array as () => Person[], default: () => [] },
-  maxHeight: { type: Number, default: 500 },
+  maxHeight: { type: Number, default: 400 },
 });
+
+const emit = defineEmits<{
+  (e: "relationChanged"): void;
+}>();
 
 const selectedPeopleMap = ref(new Map<number, boolean>());
 
@@ -81,3 +89,28 @@ const isEmpty = computed(
     props.selectable.length === 0
 );
 </script>
+
+<style scoped>
+.people-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.empty-state {
+  color: #6c757d;
+  font-size: 1rem;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+</style>

@@ -16,6 +16,7 @@ import { Profile } from "@/core/Profile";
 import NavbarApp from "@/components/NavbarApp.vue";
 import { People } from "@/core/People";
 import { Person } from "@/core/Person";
+import { setProfileInstance } from "@/router";
 
 const profile = reactive(Profile.getInstance());
 const isLoading = ref(true);
@@ -38,16 +39,18 @@ async function loadProfile(): Promise<void> {
     console.error("Failed to load profile:", error);
     profile.setPerson(new Person());
   } finally {
+    setProfileInstance(profile);
     isLoading.value = false;
   }
 }
 
 onMounted(async () => {
-  console.log(hasSession());
+  console.log("hasSession:", hasSession());
   if (hasSession()) {
     await loadProfile();
   } else {
-    console.log("No CSRF token found");
+    console.log("No session found");
+    setProfileInstance(profile);
     isLoading.value = false;
   }
 });

@@ -134,6 +134,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "check", person: Person, checked: boolean): void;
+  (e: "relationChanged", person: Person): void;
 }>();
 
 const checked = ref(props.defaultChecked ?? false);
@@ -153,36 +154,37 @@ const currentRelation = ref(props.relation);
 const user = props.profile.getAuthorizedUser();
 
 async function doAction(action: string) {
-  // ToDo: синхронизировать с готовой функцией
+  console.log("Sending action:", action, "for user:", props.person.getUserUID());
   const result = await user.doFriendAction(action, props.person.getUserUID());
+  console.log("Result:", result);
 
   if (
     result === "friend_request_sent" ||
     result === "friend_request_already_sent"
   ) {
     currentRelation.value = RelationToAuthorizedUser.SENT_FRIEND_REQUEST;
-  } else if (result === "accept_friendship") {
+  } else if (result === "accept_friendship" || result === "friends") {
     currentRelation.value = RelationToAuthorizedUser.FRIEND;
   } else if (result === "not_friends" || result === "decline_friendship") {
     currentRelation.value = RelationToAuthorizedUser.NO_RELATION;
   }
+
+  emit("relationChanged", props.person);
 }
 
 async function sendFriendRequest() {
-  await doAction("send_friend_request");
-  // TODO обновление модуля
+  await doAction("request_friendship");
 }
 
 function acceptFriendRequest() {
-  doAction("accept_friend_request");
+  doAction("accept_friendship");
 }
 
 function declineFriendRequest() {
-  doAction("decline_friend_request");
+  doAction("decline_friendship");
 }
 
 async function removeFriend() {
   await doAction("delete_friendship");
-  window.location.reload();
 }
 </script>

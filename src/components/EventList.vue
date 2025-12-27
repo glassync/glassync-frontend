@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="mb-3">{{ title }}</h4>
-    <div class="overflow-auto border rounded p-2" style="max-height: 400px">
+    <div class="overflow-auto border rounded p-2">
       <EventCard v-for="event in events" :key="event.getUID()" :event="event" />
       <p v-if="events.length === 0" class="text-muted">Нет событий</p>
     </div>

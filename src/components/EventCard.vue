@@ -7,7 +7,7 @@
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          fill="currentColor"
+          fill="black"
           class="bi bi-gear"
           viewBox="0 0 16 16"
         >
@@ -69,10 +69,8 @@ const props = defineProps<{
 
 const router = useRouter();
 
-// Массив участников (Person[])
 const members = ref<Person[]>([]);
 
-// Функция, чтобы получить всех участников по UID из event.getMembers()
 async function loadMembers() {
   members.value = [];
   const membersMap = props.event.getMembers();
@@ -88,7 +86,6 @@ async function loadMembers() {
   members.value = loadedPersons;
 }
 
-// Загружаем участников при изменении события
 watch(
   () => props.event,
   () => {
